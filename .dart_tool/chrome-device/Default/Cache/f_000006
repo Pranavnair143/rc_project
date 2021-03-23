@@ -1,0 +1,252 @@
+define(['dart_sdk', 'packages/geolocator_platform_interface/src/implementations/method_channel_geolocator.dart', 'packages/flutter/src/services/system_channels.dart', 'packages/geolocator_platform_interface/src/enums/location_permission.dart', 'packages/geolocator_platform_interface/src/enums/location_accuracy.dart', 'packages/geolocator_platform_interface/src/errors/location_service_disabled_exception.dart', 'packages/geolocator_platform_interface/src/models/position.dart', 'packages/geolocator_platform_interface/src/errors/permission_denied_exception.dart', 'packages/geolocator_platform_interface/src/errors/position_update_exception.dart'], (function load__packages__geolocator_web__geolocator_web_dart(dart_sdk, packages__geolocator_platform_interface__src__implementations__method_channel_geolocator$46dart, packages__flutter__src__services__system_channels$46dart, packages__geolocator_platform_interface__src__enums__location_permission$46dart, packages__geolocator_platform_interface__src__enums__location_accuracy$46dart, packages__geolocator_platform_interface__src__errors__location_service_disabled_exception$46dart, packages__geolocator_platform_interface__src__models__position$46dart, packages__geolocator_platform_interface__src__errors__permission_denied_exception$46dart, packages__geolocator_platform_interface__src__errors__position_update_exception$46dart) {
+  'use strict';
+  const core = dart_sdk.core;
+  const html = dart_sdk.html;
+  const async = dart_sdk.async;
+  const dart = dart_sdk.dart;
+  const dartx = dart_sdk.dartx;
+  const geolocator_platform_interface = packages__geolocator_platform_interface__src__implementations__method_channel_geolocator$46dart.src__geolocator_platform_interface;
+  const message_codec = packages__flutter__src__services__system_channels$46dart.src__services__message_codec;
+  const location_permission = packages__geolocator_platform_interface__src__enums__location_permission$46dart.src__enums__location_permission;
+  const location_accuracy = packages__geolocator_platform_interface__src__enums__location_accuracy$46dart.src__enums__location_accuracy;
+  const location_service_disabled_exception = packages__geolocator_platform_interface__src__errors__location_service_disabled_exception$46dart.src__errors__location_service_disabled_exception;
+  const position = packages__geolocator_platform_interface__src__models__position$46dart.src__models__position;
+  const permission_denied_exception = packages__geolocator_platform_interface__src__errors__permission_denied_exception$46dart.src__errors__permission_denied_exception;
+  const position_update_exception = packages__geolocator_platform_interface__src__errors__position_update_exception$46dart.src__errors__position_update_exception;
+  var geolocator_web = Object.create(dart.library);
+  var $query = dartx.query;
+  var $getCurrentPosition = dartx.getCurrentPosition;
+  var $watchPosition = dartx.watchPosition;
+  var $toString = dartx.toString;
+  dart._checkModuleNullSafetyMode(false);
+  var T = {
+    FutureOfbool: () => (T.FutureOfbool = dart.constFn(async.Future$(core.bool)))(),
+    dynamicToNever: () => (T.dynamicToNever = dart.constFn(dart.fnType(dart.Never, [dart.dynamic])))(),
+    StringL: () => (T.StringL = dart.constFn(dart.legacy(core.String)))()
+  };
+  var T$Eval = Object.assign({
+    _: () => T$Eval
+  }, T);
+  var S = {
+    _: () => S
+  };
+  var S$Eval = Object.assign({
+    _: () => S$Eval
+  }, S);
+  const CT = Object.create({
+    _: () => (C, CT)
+  });
+  dart.defineLazy(CT, {
+    get C0() {
+      return C[0] = dart.const({
+        __proto__: location_accuracy.LocationAccuracy.prototype,
+        [_name]: "LocationAccuracy.best",
+        index: 4
+      });
+    },
+    get C1() {
+      return C[1] = dart.constMap(T.StringL(), T.StringL(), ["name", "geolocation"]);
+    }
+  }, false);
+  var C = Array(2).fill(void 0);
+  var I = [
+    "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/geolocator_web-2.0.1/lib/geolocator_web.dart",
+    "package:geolocator_web/geolocator_web.dart"
+  ];
+  var _geolocation = dart.privateName(geolocator_web, "_geolocation");
+  var _permissions = dart.privateName(geolocator_web, "_permissions");
+  var _locationServicesEnabled = dart.privateName(geolocator_web, "_locationServicesEnabled");
+  var _toLocationPermission = dart.privateName(geolocator_web, "_toLocationPermission");
+  var _unsupported = dart.privateName(geolocator_web, "_unsupported");
+  var _name = dart.privateName(location_accuracy, "_name");
+  var _enableHighAccuracy = dart.privateName(geolocator_web, "_enableHighAccuracy");
+  var _toPosition = dart.privateName(geolocator_web, "_toPosition");
+  var _convertPositionError = dart.privateName(geolocator_web, "_convertPositionError");
+  geolocator_web.GeolocatorPlugin = class GeolocatorPlugin extends geolocator_platform_interface.GeolocatorPlatform {
+    static registerWith(registrar) {
+      if (registrar == null) dart.nullFailed(I[0], 18, 38, "registrar");
+      geolocator_platform_interface.GeolocatorPlatform.instance = new geolocator_web.GeolocatorPlugin.__(html.window.navigator);
+    }
+    get [_locationServicesEnabled]() {
+      return this[_geolocation] != null;
+    }
+    checkPermission() {
+      return async.async(location_permission.LocationPermission, (function* checkPermission() {
+        if (this[_permissions] == null) {
+          dart.throw(new message_codec.PlatformException.new({code: "LOCATION_SERVICES_NOT_SUPPORTED", message: "Location services are not supported on this browser."}));
+        }
+        let result = (yield dart.nullCheck(this[_permissions])[$query](geolocator_web.GeolocatorPlugin._permissionQuery));
+        return this[_toLocationPermission](result.state);
+      }).bind(this));
+    }
+    requestPermission() {
+      return async.async(location_permission.LocationPermission, (function* requestPermission() {
+        if (this[_geolocation] == null) {
+          dart.throw(new message_codec.PlatformException.new({code: "LOCATION_SERVICES_NOT_SUPPORTED", message: "Location services are not supported on this browser."}));
+        }
+        try {
+          dart.nullCheck(this[_geolocation])[$getCurrentPosition]();
+          return location_permission.LocationPermission.whileInUse;
+        } catch (e$) {
+          let e = dart.getThrown(e$);
+          if (core.Object.is(e)) {
+            return location_permission.LocationPermission.denied;
+          } else
+            throw e$;
+        }
+      }).bind(this));
+    }
+    isLocationServiceEnabled() {
+      return T.FutureOfbool().value(this[_locationServicesEnabled]);
+    }
+    getLastKnownPosition(opts) {
+      let forceAndroidLocationManager = opts && 'forceAndroidLocationManager' in opts ? opts.forceAndroidLocationManager : false;
+      if (forceAndroidLocationManager == null) dart.nullFailed(I[0], 67, 10, "forceAndroidLocationManager");
+      return dart.throw(this[_unsupported]("getLastKnownPosition"));
+    }
+    getCurrentPosition(opts) {
+      let desiredAccuracy = opts && 'desiredAccuracy' in opts ? opts.desiredAccuracy : C[0] || CT.C0;
+      if (desiredAccuracy == null) dart.nullFailed(I[0], 73, 22, "desiredAccuracy");
+      let forceAndroidLocationManager = opts && 'forceAndroidLocationManager' in opts ? opts.forceAndroidLocationManager : false;
+      if (forceAndroidLocationManager == null) dart.nullFailed(I[0], 74, 10, "forceAndroidLocationManager");
+      let timeLimit = opts && 'timeLimit' in opts ? opts.timeLimit : null;
+      return async.async(position.Position, (function* getCurrentPosition() {
+        if (!dart.test(this[_locationServicesEnabled])) {
+          dart.throw(new location_service_disabled_exception.LocationServiceDisabledException.new());
+        }
+        try {
+          let result = (yield dart.nullCheck(this[_geolocation])[$getCurrentPosition]({enableHighAccuracy: this[_enableHighAccuracy](desiredAccuracy), timeout: timeLimit}));
+          return this[_toPosition](result);
+        } catch (e$) {
+          let e = dart.getThrown(e$);
+          if (html.PositionError.is(e)) {
+            dart.throw(this[_convertPositionError](e));
+          } else
+            throw e$;
+        }
+      }).bind(this));
+    }
+    getPositionStream(opts) {
+      let desiredAccuracy = opts && 'desiredAccuracy' in opts ? opts.desiredAccuracy : C[0] || CT.C0;
+      if (desiredAccuracy == null) dart.nullFailed(I[0], 95, 22, "desiredAccuracy");
+      let distanceFilter = opts && 'distanceFilter' in opts ? opts.distanceFilter : 0;
+      if (distanceFilter == null) dart.nullFailed(I[0], 96, 9, "distanceFilter");
+      let forceAndroidLocationManager = opts && 'forceAndroidLocationManager' in opts ? opts.forceAndroidLocationManager : false;
+      if (forceAndroidLocationManager == null) dart.nullFailed(I[0], 97, 10, "forceAndroidLocationManager");
+      let timeInterval = opts && 'timeInterval' in opts ? opts.timeInterval : 0;
+      if (timeInterval == null) dart.nullFailed(I[0], 98, 9, "timeInterval");
+      let timeLimit = opts && 'timeLimit' in opts ? opts.timeLimit : null;
+      if (!dart.test(this[_locationServicesEnabled])) {
+        dart.throw(new location_service_disabled_exception.LocationServiceDisabledException.new());
+      }
+      return dart.nullCheck(this[_geolocation])[$watchPosition]({enableHighAccuracy: this[_enableHighAccuracy](desiredAccuracy), timeout: timeLimit}).handleError(dart.fn(error => dart.throw(this[_convertPositionError](html.PositionError.as(error))), T.dynamicToNever())).map(position.Position, dart.bind(this, _toPosition));
+    }
+    openAppSettings() {
+      return dart.throw(this[_unsupported]("openAppSettings"));
+    }
+    openLocationSettings() {
+      return dart.throw(this[_unsupported]("openLocationSettings"));
+    }
+    [_convertPositionError](error) {
+      if (error == null) dart.nullFailed(I[0], 121, 54, "error");
+      switch (error.code) {
+        case 1:
+        {
+          return new permission_denied_exception.PermissionDeniedException.new(error.message);
+        }
+        case 2:
+        {
+          return new position_update_exception.PositionUpdateException.new(error.message);
+        }
+        case 3:
+        {
+          return new async.TimeoutException.new(error.message);
+        }
+        default:
+        {
+          return new message_codec.PlatformException.new({code: dart.toString(error.code), message: error.message});
+        }
+      }
+    }
+    [_enableHighAccuracy](accuracy) {
+      if (accuracy == null) dart.nullFailed(I[0], 137, 45, "accuracy");
+      return dart.notNull(accuracy.index) >= dart.notNull(location_accuracy.LocationAccuracy.high.index);
+    }
+    [_toLocationPermission](webPermission) {
+      switch (webPermission) {
+        case "granted":
+        {
+          return location_permission.LocationPermission.whileInUse;
+        }
+        case "prompt":
+        {
+          return location_permission.LocationPermission.denied;
+        }
+        case "denied":
+        {
+          return location_permission.LocationPermission.deniedForever;
+        }
+        default:
+        {
+          dart.throw(new core.ArgumentError.new(dart.str(webPermission) + " cannot be converted to a LocationPermission."));
+        }
+      }
+    }
+    [_toPosition](webPosition) {
+      let t2, t2$, t2$0, t2$1;
+      if (webPosition == null) dart.nullFailed(I[0], 154, 41, "webPosition");
+      let coords = webPosition.coords;
+      if (coords == null) {
+        dart.throw(new position_update_exception.PositionUpdateException.new("Received invalid position result."));
+      }
+      return new position.Position.new({latitude: dart.nullCast(coords.latitude, core.double), longitude: dart.nullCast(coords.longitude, core.double), timestamp: webPosition.timestamp != null ? new core.DateTime.fromMillisecondsSinceEpoch(dart.nullCheck(webPosition.timestamp)) : new core.DateTime.now(), altitude: (t2 = coords.altitude, t2 == null ? 0.0 : t2), accuracy: (t2$ = coords.accuracy, t2$ == null ? 0.0 : t2$), heading: (t2$0 = coords.heading, t2$0 == null ? 0.0 : t2$0), floor: null, speed: (t2$1 = coords.speed, t2$1 == null ? 0.0 : t2$1), speedAccuracy: 0.0, isMocked: false});
+    }
+    [_unsupported](method) {
+      if (method == null) dart.nullFailed(I[0], 177, 41, "method");
+      return new message_codec.PlatformException.new({code: "UNSUPPORTED_OPERATION", message: dart.str(method) + " is not supported on the web platform."});
+    }
+  };
+  (geolocator_web.GeolocatorPlugin.__ = function(navigator) {
+    if (navigator == null) dart.nullFailed(I[0], 22, 37, "navigator");
+    this[_geolocation] = navigator.geolocation;
+    this[_permissions] = navigator.permissions;
+    geolocator_web.GeolocatorPlugin.__proto__.new.call(this);
+    ;
+  }).prototype = geolocator_web.GeolocatorPlugin.prototype;
+  dart.addTypeTests(geolocator_web.GeolocatorPlugin);
+  dart.addTypeCaches(geolocator_web.GeolocatorPlugin);
+  dart.setMethodSignature(geolocator_web.GeolocatorPlugin, () => ({
+    __proto__: dart.getMethods(geolocator_web.GeolocatorPlugin.__proto__),
+    getLastKnownPosition: dart.fnType(async.Future$(position.Position), [], {forceAndroidLocationManager: core.bool}, {}),
+    [_convertPositionError]: dart.fnType(core.Exception, [html.PositionError]),
+    [_enableHighAccuracy]: dart.fnType(core.bool, [location_accuracy.LocationAccuracy]),
+    [_toLocationPermission]: dart.fnType(location_permission.LocationPermission, [dart.nullable(core.String)]),
+    [_toPosition]: dart.fnType(position.Position, [html.Geoposition]),
+    [_unsupported]: dart.fnType(message_codec.PlatformException, [core.String])
+  }));
+  dart.setGetterSignature(geolocator_web.GeolocatorPlugin, () => ({
+    __proto__: dart.getGetters(geolocator_web.GeolocatorPlugin.__proto__),
+    [_locationServicesEnabled]: core.bool
+  }));
+  dart.setLibraryUri(geolocator_web.GeolocatorPlugin, I[1]);
+  dart.setFieldSignature(geolocator_web.GeolocatorPlugin, () => ({
+    __proto__: dart.getFields(geolocator_web.GeolocatorPlugin.__proto__),
+    [_geolocation]: dart.finalFieldType(dart.nullable(html.Geolocation)),
+    [_permissions]: dart.finalFieldType(dart.nullable(html.Permissions))
+  }));
+  dart.defineLazy(geolocator_web.GeolocatorPlugin, {
+    /*geolocator_web.GeolocatorPlugin._permissionQuery*/get _permissionQuery() {
+      return C[1] || CT.C1;
+    }
+  }, false);
+  dart.trackLibraries("packages/geolocator_web/geolocator_web.dart", {
+    "package:geolocator_web/geolocator_web.dart": geolocator_web
+  }, {
+  }, '{"version":3,"sourceRoot":"","sources":["geolocator_web.dart"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;UAiBqC;AACsC,MAApD,4DAA4B,uCAAO,AAAO;IAC/D;;AAMqC,YAAA,AAAa;IAAO;;AAGf;AACxC,YAAI,AAAa;AAId,UAHD,WAAM,+CACE,4CACG;;AAIe,sBAAS,MAAkB,AAAE,eAAd,4BACzC;AAGF,cAAO,6BAAsB,AAAO,MAAD;MACrC;;;AAG4C;AAC1C,YAAI,AAAa;AAId,UAHD,WAAM,+CACE,4CACG;;AAIb;AACoC,UAAtB,AAAE,eAAd;AACA,gBAA0B;;cACnB;AAAP;AACA,kBAA0B;;;;MAE9B;;;AAII,YAAO,wBAAM;IAAyB;;UAInC;;AAEH,wBAAM,mBAAa;IAAuB;;UAI3B;;UACZ;;UACK;AAHuB;AAKjC,uBAAK;AACqC,UAAxC,WAAM;;AAGR;AACQ,wBAAS,MAAkB,AAAE,eAAd,8DACC,0BAAoB,eAAe,YAC9C,SAAS;AAGpB,gBAAO,mBAAY,MAAM;;cACI;AAA7B;AAC8B,YAA9B,WAAM,4BAAsB,CAAC;;;;MAEjC;;;UAImB;;UACb;;UACC;;UACD;;UACM;AAEV,qBAAK;AACqC,QAAxC,WAAM;;AAGR,YAAmB,AACd,AAIA,AACA,gBANE,yDAEmB,0BAAoB,eAAe,YAC9C,SAAS,eAEP,QAAC,SAAU,WAAM,kDAAsB,KAAK,2DACpD;IACX;;AAGkC,wBAAM,mBAAa;IAAkB;;AAInE,wBAAM,mBAAa;IAAuB;;UAEK;AACjD,cAAQ,AAAM,KAAD;;;AAET,gBAAO,+DAA0B,AAAM,KAAD;;;;AAEtC,gBAAO,2DAAwB,AAAM,KAAD;;;;AAEpC,gBAAO,gCAAiB,AAAM,KAAD;;;;AAE7B,gBAAO,gDACY,cAAX,AAAM,KAAD,iBACF,AAAM,KAAD;;;IAGtB;;UAE0C;AACtC,YAAe,cAAf,AAAS,QAAD,wBAA2B,AAAK;IAAK;4BAEA;AAC/C,cAAQ,aAAa;;;AAEjB,gBAA0B;;;;AAE1B,gBAA0B;;;;AAE1B,gBAA0B;;;;AAGwC,UADlE,WAAM,2BAC2D,SAA3D,aAAa;;;IAEzB;kBAEsC;;;AAC9B,mBAAS,AAAY,WAAD;AAE1B,UAAI,AAAO,MAAD;AAC8D,QAAtE,WAAU,0DAAwB;;AAGpC,YAAO,sCACqB,cAAhB,AAAO,MAAD,oCACY,cAAjB,AAAO,MAAD,qCACN,AAAY,AAAU,WAAX,qBACP,6CAAgD,eAArB,AAAY,WAAD,eACtC,oCACsB,KAA3B,AAAO,MAAD,WAAU,aAAc,sBACH,MAA3B,AAAO,MAAD,WAAU,cAAc,sBACL,OAA1B,AAAO,MAAD,UAAS,eAAc,oBAC/B,cACwB,OAAxB,AAAO,MAAD,QAAO,eAAc,4BACnB,eACL;IAEd;;UAEsC;AACpC,YAAO,gDACC,kCACkD,SAA7C,MAAM;IAErB;;;QAhKkC;IACf,qBAAE,AAAU,SAAD;IACX,qBAAE,AAAU,SAAD;AAF9B;;EAE0C;;;;;;;;;;;;;;;;;;;;;;;MAZ7B,gDAAgB","file":"../../../../../../../../../../packages/geolocator_web/geolocator_web.dart.lib.js"}');
+  // Exports:
+  return {
+    geolocator_web: geolocator_web
+  };
+}));
+
+//# sourceMappingURL=geolocator_web.dart.lib.js.map
