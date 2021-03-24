@@ -3,9 +3,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_maps_utils/google_maps_utils.dart' as gmc;
+import 'dart:math' show Point;
+
+import 'resultSheet.dart';
 import 'api_key.dart';
 import 'input_box.dart';
-import 'dart:math' show cos, sqrt, asin;
+import 'distCalc.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,6 +27,17 @@ class AppView extends StatefulWidget {
 
 class _AppViewState extends State<AppView> {
   Set<Marker> markers = {};
+  Set<Marker> rcMarkers = {
+    Marker(
+      markerId: MarkerId(''),
+      position: LatLng(23.072897226544825, 70.11426513723994),
+      infoWindow: InfoWindow(
+        title: 'Railway Crossing',
+        snippet: 'Paata Nhi',
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    ),
+  };
   Position currentPosition;
   CameraPosition _iniPosition = CameraPosition(target: LatLng(0.0, 0.0));
   GoogleMapController mapController;
@@ -37,17 +52,30 @@ class _AppViewState extends State<AppView> {
   final orgNode = FocusNode();
   final destNode = FocusNode();
 
-  String _placeDistance;
+  var _placeDistance;
 
   PolylinePoints polylinePoints;
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
+  List<Point> polylinePoint = [];
+
+  void showSheet(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(40),
+                topRight: const Radius.circular(40))),
+        backgroundColor: Colors.white,
+        builder: (_) {
+          return ResultSheet();
+        });
+  }
 
   Future<bool> _calculateDistance() async {
     try {
       // Retrieving placemarks from addresses
       print(destAddress);
-      print('vfgggggggggggggg');
       List<Location> startPlacemark = await locationFromAddress(orgAddress);
       List<Location> destinationPlacemark =
           await locationFromAddress(destAddress);
@@ -139,27 +167,30 @@ class _AppViewState extends State<AppView> {
         );
 
         await _createPolylines(startCoordinates, destinationCoordinates);
-
-        double totalDistance = 0.0;
-        for (int i = 0; i < polylineCoordinates.length - 1; i++) {
-          totalDistance += _coordinateDistance(
-            polylineCoordinates[i].latitude,
-            polylineCoordinates[i].longitude,
-            polylineCoordinates[i + 1].latitude,
-            polylineCoordinates[i + 1].longitude,
-          );
+        int checkOn;
+        for (var i = 0; i < rcMarkers.length; i++) {
+          checkOn = gmc.PolyUtils.locationIndexOnEdgeOrPath(
+              Point(rcMarkers.elementAt(i).position.latitude,
+                  rcMarkers.elementAt(i).position.longitude),
+              polylinePoint,
+              false,
+              false,
+              100);
+          if (checkOn >= 0) {
+            print(checkOn);
+            break;
+          }
         }
+        print(checkOn);
 
         setState(() {
-          _placeDistance = totalDistance.toStringAsFixed(2);
-          print('DISTANCE: $_placeDistance km');
+          _placeDistance = distCalc(startCoordinates, destinationCoordinates);
+          print(_placeDistance.data);
         });
-
         return true;
       }
     } catch (e) {
       print(e);
-      print('HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
     }
     return false;
   }
@@ -176,6 +207,7 @@ class _AppViewState extends State<AppView> {
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        polylinePoint.add(Point(point.latitude, point.longitude));
       });
     }
 
@@ -189,15 +221,6 @@ class _AppViewState extends State<AppView> {
     polylines[id] = polyline;
   }
 
-  double _coordinateDistance(lat1, lon1, lat2, lon2) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((lat2 - lat1) * p) / 2 +
-        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-    return 12742 * asin(sqrt(a));
-  }
-
   void submitData() async {
     orgAddress = orgController.text;
     destAddress = destController.text;
@@ -209,23 +232,24 @@ class _AppViewState extends State<AppView> {
         if (markers.isNotEmpty) markers.clear();
         if (polylines.isNotEmpty) polylines.clear();
         if (polylineCoordinates.isNotEmpty) polylineCoordinates.clear();
+        if (polylinePoint.isNotEmpty) polylinePoint.clear();
         _placeDistance = null;
       });
       _calculateDistance().then((isCalculated) {
         if (isCalculated) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Distance Calculated Sucessfully'),
+              content: Text('See Results'),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error Calculating Distance'),
+              content: Text('Error..!!Try Again.'),
             ),
           );
         }
-      });
+      }).then((infoRc) => showSheet(context));
     } else {
       return null;
     }
@@ -242,8 +266,6 @@ class _AppViewState extends State<AppView> {
         orgController.text = currentAddress;
         orgAddress = currentAddress;
         print(orgAddress);
-        print(
-            'ADRESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs');
       });
     } catch (e) {
       print(e);
@@ -282,7 +304,10 @@ class _AppViewState extends State<AppView> {
           body: Stack(
         children: [
           GoogleMap(
-            markers: markers != null ? Set<Marker>.from(markers) : null,
+            markers: markers != null
+                ? Set<Marker>.from(
+                    [rcMarkers, markers].expand((x) => x).toList())
+                : null,
             initialCameraPosition: _iniPosition,
             myLocationButtonEnabled: false,
             myLocationEnabled: true,

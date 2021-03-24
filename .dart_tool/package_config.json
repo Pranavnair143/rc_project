@@ -122,6 +122,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "google_maps_utils",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/google_maps_utils-1.4.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "http",
       "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http-0.13.1",
       "packageUri": "lib/",
@@ -236,7 +242,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-03-23T11:10:40.777332Z",
+  "generated": "2021-03-24T11:39:04.758513Z",
   "generator": "pub",
   "generatorVersion": "2.12.1"
 }

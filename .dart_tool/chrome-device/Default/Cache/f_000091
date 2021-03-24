@@ -1,0 +1,771 @@
+define(['dart_sdk', 'packages/flutter/src/material/app.dart', 'packages/flutter/src/widgets/widget_span.dart', 'packages/google_maps_flutter_platform_interface/src/types/utils/tile_overlay.dart', 'packages/google_maps_flutter_platform_interface/src/types/location.dart', 'packages/flutter/src/material/icon_button.dart', 'packages/rc_app/resultSheet.dart', 'packages/geocoding/geocoding.dart', 'packages/geolocator_platform_interface/src/models/position.dart', 'packages/google_maps_flutter_platform_interface/src/types/bitmap.dart', 'packages/flutter_polyline_points/src/network_util.dart', 'packages/rc_app/api_key.dart', 'packages/flutter_polyline_points/src/PointLatLng.dart', 'packages/flutter_polyline_points/src/utils/request_enums.dart', 'packages/flutter/src/material/colors.dart', 'packages/geolocator/geolocator.dart', 'packages/geolocator_platform_interface/src/enums/location_accuracy.dart', 'packages/google_maps_flutter/google_maps_flutter.dart', 'packages/rc_app/input_box.dart'], (function load__packages__rc_app__main_dart(dart_sdk, packages__flutter__src__material__app$46dart, packages__flutter__src__widgets__widget_span$46dart, packages__google_maps_flutter_platform_interface__src__types__utils__tile_overlay$46dart, packages__google_maps_flutter_platform_interface__src__types__location$46dart, packages__flutter__src__material__icon_button$46dart, packages__rc_app__resultSheet$46dart, packages__geocoding__geocoding$46dart, packages__geolocator_platform_interface__src__models__position$46dart, packages__google_maps_flutter_platform_interface__src__types__bitmap$46dart, packages__flutter_polyline_points__src__network_util$46dart, packages__rc_app__api_key$46dart, packages__flutter_polyline_points__src__PointLatLng$46dart, packages__flutter_polyline_points__src__utils__request_enums$46dart, packages__flutter__src__material__colors$46dart, packages__geolocator__geolocator$46dart, packages__geolocator_platform_interface__src__enums__location_accuracy$46dart, packages__google_maps_flutter__google_maps_flutter$46dart, packages__rc_app__input_box$46dart) {
+  'use strict';
+  const core = dart_sdk.core;
+  const collection = dart_sdk.collection;
+  const _js_helper = dart_sdk._js_helper;
+  const _interceptors = dart_sdk._interceptors;
+  const async = dart_sdk.async;
+  const math = dart_sdk.math;
+  const dart = dart_sdk.dart;
+  const dartx = dart_sdk.dartx;
+  const app = packages__flutter__src__material__app$46dart.src__material__app;
+  const widget_inspector = packages__flutter__src__widgets__widget_span$46dart.src__widgets__widget_inspector;
+  const framework = packages__flutter__src__widgets__widget_span$46dart.src__widgets__framework;
+  const editable_text = packages__flutter__src__widgets__widget_span$46dart.src__widgets__editable_text;
+  const focus_manager = packages__flutter__src__widgets__widget_span$46dart.src__widgets__focus_manager;
+  const text = packages__flutter__src__widgets__widget_span$46dart.src__widgets__text;
+  const container = packages__flutter__src__widgets__widget_span$46dart.src__widgets__container;
+  const media_query = packages__flutter__src__widgets__widget_span$46dart.src__widgets__media_query;
+  const basic = packages__flutter__src__widgets__widget_span$46dart.src__widgets__basic;
+  const binding = packages__flutter__src__widgets__widget_span$46dart.src__widgets__binding;
+  const marker = packages__google_maps_flutter_platform_interface__src__types__utils__tile_overlay$46dart.src__types__marker;
+  const camera = packages__google_maps_flutter_platform_interface__src__types__utils__tile_overlay$46dart.src__types__camera;
+  const polyline$ = packages__google_maps_flutter_platform_interface__src__types__utils__tile_overlay$46dart.src__types__polyline;
+  const ui = packages__google_maps_flutter_platform_interface__src__types__utils__tile_overlay$46dart.src__types__ui;
+  const location = packages__google_maps_flutter_platform_interface__src__types__location$46dart.src__types__location;
+  const bottom_sheet = packages__flutter__src__material__icon_button$46dart.src__material__bottom_sheet;
+  const scaffold = packages__flutter__src__material__icon_button$46dart.src__material__scaffold;
+  const snack_bar = packages__flutter__src__material__icon_button$46dart.src__material__snack_bar;
+  const resultSheet = packages__rc_app__resultSheet$46dart.resultSheet;
+  const geocoding = packages__geocoding__geocoding$46dart.geocoding;
+  const position = packages__geolocator_platform_interface__src__models__position$46dart.src__models__position;
+  const bitmap = packages__google_maps_flutter_platform_interface__src__types__bitmap$46dart.src__types__bitmap;
+  const flutter_polyline_points = packages__flutter_polyline_points__src__network_util$46dart.flutter_polyline_points;
+  const api_key = packages__rc_app__api_key$46dart.api_key;
+  const PointLatLng = packages__flutter_polyline_points__src__PointLatLng$46dart.src__PointLatLng;
+  const request_enums = packages__flutter_polyline_points__src__utils__request_enums$46dart.src__utils__request_enums;
+  const colors = packages__flutter__src__material__colors$46dart.src__material__colors;
+  const geolocator = packages__geolocator__geolocator$46dart.geolocator;
+  const location_accuracy = packages__geolocator_platform_interface__src__enums__location_accuracy$46dart.src__enums__location_accuracy;
+  const google_maps_flutter = packages__google_maps_flutter__google_maps_flutter$46dart.google_maps_flutter;
+  const input_box = packages__rc_app__input_box$46dart.input_box;
+  var main = Object.create(dart.library);
+  var $_get = dartx._get;
+  var $length = dartx.length;
+  var $toStringAsFixed = dartx.toStringAsFixed;
+  var $isNotEmpty = dartx.isNotEmpty;
+  var $add = dartx.add;
+  var $forEach = dartx.forEach;
+  var $_set = dartx._set;
+  var $clear = dartx.clear;
+  var $values = dartx.values;
+  dart._checkModuleNullSafetyMode(false);
+  var T = {
+    _LocationL: () => (T._LocationL = dart.constFn(dart.legacy(widget_inspector._Location)))(),
+    MarkerL: () => (T.MarkerL = dart.constFn(dart.legacy(marker.Marker)))(),
+    LinkedHashSetOfMarkerL: () => (T.LinkedHashSetOfMarkerL = dart.constFn(collection.LinkedHashSet$(T.MarkerL())))(),
+    PolylineIdL: () => (T.PolylineIdL = dart.constFn(dart.legacy(polyline$.PolylineId)))(),
+    PolylineL: () => (T.PolylineL = dart.constFn(dart.legacy(polyline$.Polyline)))(),
+    LinkedMapOfPolylineIdL$PolylineL: () => (T.LinkedMapOfPolylineIdL$PolylineL = dart.constFn(_js_helper.LinkedMap$(T.PolylineIdL(), T.PolylineL())))(),
+    LatLngL: () => (T.LatLngL = dart.constFn(dart.legacy(location.LatLng)))(),
+    JSArrayOfLatLngL: () => (T.JSArrayOfLatLngL = dart.constFn(_interceptors.JSArray$(T.LatLngL())))(),
+    ResultSheetL: () => (T.ResultSheetL = dart.constFn(dart.legacy(resultSheet.ResultSheet)))(),
+    BuildContextL: () => (T.BuildContextL = dart.constFn(dart.legacy(framework.BuildContext)))(),
+    BuildContextLToResultSheetL: () => (T.BuildContextLToResultSheetL = dart.constFn(dart.fnType(T.ResultSheetL(), [T.BuildContextL()])))(),
+    VoidToNull: () => (T.VoidToNull = dart.constFn(dart.fnType(core.Null, [])))(),
+    boolL: () => (T.boolL = dart.constFn(dart.legacy(core.bool)))(),
+    PointLatLngL: () => (T.PointLatLngL = dart.constFn(dart.legacy(PointLatLng.PointLatLng)))(),
+    PointLatLngLToNull: () => (T.PointLatLngLToNull = dart.constFn(dart.fnType(core.Null, [T.PointLatLngL()])))(),
+    numTodouble: () => (T.numTodouble = dart.constFn(dart.fnType(core.double, [core.num])))(),
+    numL: () => (T.numL = dart.constFn(dart.legacy(core.num)))(),
+    boolLToNull: () => (T.boolLToNull = dart.constFn(dart.fnType(core.Null, [T.boolL()])))(),
+    ObjectL: () => (T.ObjectL = dart.constFn(dart.legacy(core.Object)))(),
+    ObjectLTovoid: () => (T.ObjectLTovoid = dart.constFn(dart.fnType(dart.void, [T.ObjectL()])))(),
+    FutureOfNull: () => (T.FutureOfNull = dart.constFn(async.Future$(core.Null)))(),
+    FutureLOfNull: () => (T.FutureLOfNull = dart.constFn(dart.legacy(T.FutureOfNull())))(),
+    PositionL: () => (T.PositionL = dart.constFn(dart.legacy(position.Position)))(),
+    PositionLToFutureLOfNull: () => (T.PositionLToFutureLOfNull = dart.constFn(dart.fnType(T.FutureLOfNull(), [T.PositionL()])))(),
+    dynamicToNull: () => (T.dynamicToNull = dart.constFn(dart.fnType(core.Null, [dart.dynamic])))(),
+    LinkedHashSetOfPolylineL: () => (T.LinkedHashSetOfPolylineL = dart.constFn(collection.LinkedHashSet$(T.PolylineL())))(),
+    GoogleMapControllerL: () => (T.GoogleMapControllerL = dart.constFn(dart.legacy(google_maps_flutter.GoogleMapController)))(),
+    GoogleMapControllerLToNull: () => (T.GoogleMapControllerLToNull = dart.constFn(dart.fnType(core.Null, [T.GoogleMapControllerL()])))(),
+    WidgetL: () => (T.WidgetL = dart.constFn(dart.legacy(framework.Widget)))(),
+    JSArrayOfWidgetL: () => (T.JSArrayOfWidgetL = dart.constFn(_interceptors.JSArray$(T.WidgetL())))()
+  };
+  var T$Eval = Object.assign({
+    _: () => T$Eval
+  }, T);
+  var S = {
+    _: () => S
+  };
+  var S$Eval = Object.assign({
+    _: () => S$Eval
+  }, S);
+  const CT = Object.create({
+    _: () => (C, CT)
+  });
+  dart.defineLazy(CT, {
+    get C1() {
+      return C[1] = dart.constList([], T._LocationL());
+    },
+    get C0() {
+      return C[0] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[1] || CT.C1,
+        [_Location_name]: null,
+        [_Location_column]: 47,
+        [_Location_line]: 16,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C4() {
+      return C[4] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "title",
+        [_Location_column]: 24,
+        [_Location_line]: 16,
+        [_Location_file]: null
+      });
+    },
+    get C5() {
+      return C[5] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "home",
+        [_Location_column]: 41,
+        [_Location_line]: 16,
+        [_Location_file]: null
+      });
+    },
+    get C3() {
+      return C[3] = dart.constList([C[4] || CT.C4, C[5] || CT.C5], T._LocationL());
+    },
+    get C2() {
+      return C[2] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[3] || CT.C3,
+        [_Location_name]: null,
+        [_Location_column]: 12,
+        [_Location_line]: 16,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C6() {
+      return C[6] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[1] || CT.C1,
+        [_Location_name]: null,
+        [_Location_column]: 18,
+        [_Location_line]: 51,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C7() {
+      return C[7] = dart.fn(math.cos, T.numTodouble());
+    },
+    get C10() {
+      return C[10] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "data",
+        [_Location_column]: 29,
+        [_Location_line]: 225,
+        [_Location_file]: null
+      });
+    },
+    get C9() {
+      return C[9] = dart.constList([C[10] || CT.C10], T._LocationL());
+    },
+    get C8() {
+      return C[8] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[9] || CT.C9,
+        [_Location_name]: null,
+        [_Location_column]: 24,
+        [_Location_line]: 225,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C13() {
+      return C[13] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "content",
+        [_Location_column]: 15,
+        [_Location_line]: 225,
+        [_Location_file]: null
+      });
+    },
+    get C12() {
+      return C[12] = dart.constList([C[13] || CT.C13], T._LocationL());
+    },
+    get C11() {
+      return C[11] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[12] || CT.C12,
+        [_Location_name]: null,
+        [_Location_column]: 13,
+        [_Location_line]: 224,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C16() {
+      return C[16] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "data",
+        [_Location_column]: 29,
+        [_Location_line]: 231,
+        [_Location_file]: null
+      });
+    },
+    get C15() {
+      return C[15] = dart.constList([C[16] || CT.C16], T._LocationL());
+    },
+    get C14() {
+      return C[14] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[15] || CT.C15,
+        [_Location_name]: null,
+        [_Location_column]: 24,
+        [_Location_line]: 231,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C19() {
+      return C[19] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "content",
+        [_Location_column]: 15,
+        [_Location_line]: 231,
+        [_Location_file]: null
+      });
+    },
+    get C18() {
+      return C[18] = dart.constList([C[19] || CT.C19], T._LocationL());
+    },
+    get C17() {
+      return C[17] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[18] || CT.C18,
+        [_Location_name]: null,
+        [_Location_column]: 13,
+        [_Location_line]: 230,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C22() {
+      return C[22] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "markers",
+        [_Location_column]: 13,
+        [_Location_line]: 292,
+        [_Location_file]: null
+      });
+    },
+    get C23() {
+      return C[23] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "initialCameraPosition",
+        [_Location_column]: 13,
+        [_Location_line]: 293,
+        [_Location_file]: null
+      });
+    },
+    get C24() {
+      return C[24] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "myLocationButtonEnabled",
+        [_Location_column]: 13,
+        [_Location_line]: 294,
+        [_Location_file]: null
+      });
+    },
+    get C25() {
+      return C[25] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "myLocationEnabled",
+        [_Location_column]: 13,
+        [_Location_line]: 295,
+        [_Location_file]: null
+      });
+    },
+    get C26() {
+      return C[26] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "mapType",
+        [_Location_column]: 13,
+        [_Location_line]: 296,
+        [_Location_file]: null
+      });
+    },
+    get C27() {
+      return C[27] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "zoomGesturesEnabled",
+        [_Location_column]: 13,
+        [_Location_line]: 297,
+        [_Location_file]: null
+      });
+    },
+    get C28() {
+      return C[28] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "zoomControlsEnabled",
+        [_Location_column]: 13,
+        [_Location_line]: 298,
+        [_Location_file]: null
+      });
+    },
+    get C29() {
+      return C[29] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "polylines",
+        [_Location_column]: 13,
+        [_Location_line]: 299,
+        [_Location_file]: null
+      });
+    },
+    get C30() {
+      return C[30] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "onMapCreated",
+        [_Location_column]: 13,
+        [_Location_line]: 300,
+        [_Location_file]: null
+      });
+    },
+    get C21() {
+      return C[21] = dart.constList([C[22] || CT.C22, C[23] || CT.C23, C[24] || CT.C24, C[25] || CT.C25, C[26] || CT.C26, C[27] || CT.C27, C[28] || CT.C28, C[29] || CT.C29, C[30] || CT.C30], T._LocationL());
+    },
+    get C20() {
+      return C[20] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[21] || CT.C21,
+        [_Location_name]: null,
+        [_Location_column]: 11,
+        [_Location_line]: 291,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C33() {
+      return C[33] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "submitData",
+        [_Location_column]: 20,
+        [_Location_line]: 304,
+        [_Location_file]: null
+      });
+    },
+    get C34() {
+      return C[34] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "orgController",
+        [_Location_column]: 32,
+        [_Location_line]: 304,
+        [_Location_file]: null
+      });
+    },
+    get C35() {
+      return C[35] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "destController",
+        [_Location_column]: 47,
+        [_Location_line]: 304,
+        [_Location_file]: null
+      });
+    },
+    get C36() {
+      return C[36] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "currentAddress",
+        [_Location_column]: 63,
+        [_Location_line]: 304,
+        [_Location_file]: null
+      });
+    },
+    get C37() {
+      return C[37] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "orgNode",
+        [_Location_column]: 15,
+        [_Location_line]: 305,
+        [_Location_file]: null
+      });
+    },
+    get C38() {
+      return C[38] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "destNode",
+        [_Location_column]: 24,
+        [_Location_line]: 305,
+        [_Location_file]: null
+      });
+    },
+    get C32() {
+      return C[32] = dart.constList([C[33] || CT.C33, C[34] || CT.C34, C[35] || CT.C35, C[36] || CT.C36, C[37] || CT.C37, C[38] || CT.C38], T._LocationL());
+    },
+    get C31() {
+      return C[31] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[32] || CT.C32,
+        [_Location_name]: null,
+        [_Location_column]: 11,
+        [_Location_line]: 304,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C41() {
+      return C[41] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "children",
+        [_Location_column]: 9,
+        [_Location_line]: 290,
+        [_Location_file]: null
+      });
+    },
+    get C40() {
+      return C[40] = dart.constList([C[41] || CT.C41], T._LocationL());
+    },
+    get C39() {
+      return C[39] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[40] || CT.C40,
+        [_Location_name]: null,
+        [_Location_column]: 17,
+        [_Location_line]: 289,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C44() {
+      return C[44] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "body",
+        [_Location_column]: 11,
+        [_Location_line]: 289,
+        [_Location_file]: null
+      });
+    },
+    get C43() {
+      return C[43] = dart.constList([C[44] || CT.C44], T._LocationL());
+    },
+    get C42() {
+      return C[42] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[43] || CT.C43,
+        [_Location_name]: null,
+        [_Location_column]: 14,
+        [_Location_line]: 288,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C47() {
+      return C[47] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "height",
+        [_Location_column]: 7,
+        [_Location_line]: 286,
+        [_Location_file]: null
+      });
+    },
+    get C48() {
+      return C[48] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "width",
+        [_Location_column]: 7,
+        [_Location_line]: 287,
+        [_Location_file]: null
+      });
+    },
+    get C49() {
+      return C[49] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: null,
+        [_Location_name]: "child",
+        [_Location_column]: 7,
+        [_Location_line]: 288,
+        [_Location_file]: null
+      });
+    },
+    get C46() {
+      return C[46] = dart.constList([C[47] || CT.C47, C[48] || CT.C48, C[49] || CT.C49], T._LocationL());
+    },
+    get C45() {
+      return C[45] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[46] || CT.C46,
+        [_Location_name]: null,
+        [_Location_column]: 12,
+        [_Location_line]: 285,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    },
+    get C50() {
+      return C[50] = dart.const({
+        __proto__: widget_inspector._Location.prototype,
+        [_Location_parameterLocations]: C[1] || CT.C1,
+        [_Location_name]: null,
+        [_Location_column]: 23,
+        [_Location_line]: 11,
+        [_Location_file]: "file:///C:/fsrc/f_projects/rc_app/lib/main.dart"
+      });
+    }
+  }, false);
+  var C = Array(51).fill(void 0);
+  var I = ["package:rc_app/main.dart"];
+  var _Location_parameterLocations = dart.privateName(widget_inspector, "_Location.parameterLocations");
+  var _Location_name = dart.privateName(widget_inspector, "_Location.name");
+  var _Location_column = dart.privateName(widget_inspector, "_Location.column");
+  var _Location_line = dart.privateName(widget_inspector, "_Location.line");
+  var _Location_file = dart.privateName(widget_inspector, "_Location.file");
+  main.MyApp = class MyApp extends framework.StatelessWidget {
+    build(context) {
+      return new app.MaterialApp.new({title: "RC_APP", home: new main.AppView.new({$creationLocationd_0dea112b090073317d4: C[0] || CT.C0}), $creationLocationd_0dea112b090073317d4: C[2] || CT.C2});
+    }
+  };
+  (main.MyApp.new = function(opts) {
+    let $36creationLocationd_0dea112b090073317d4 = opts && '$creationLocationd_0dea112b090073317d4' in opts ? opts.$creationLocationd_0dea112b090073317d4 : null;
+    main.MyApp.__proto__.new.call(this, {$creationLocationd_0dea112b090073317d4: $36creationLocationd_0dea112b090073317d4});
+    ;
+  }).prototype = main.MyApp.prototype;
+  dart.addTypeTests(main.MyApp);
+  dart.addTypeCaches(main.MyApp);
+  dart.setMethodSignature(main.MyApp, () => ({
+    __proto__: dart.getMethods(main.MyApp.__proto__),
+    build: dart.fnType(dart.legacy(framework.Widget), [dart.legacy(framework.BuildContext)])
+  }));
+  dart.setLibraryUri(main.MyApp, I[0]);
+  main.AppView = class AppView extends framework.StatefulWidget {
+    createState() {
+      return new main._AppViewState.new();
+    }
+  };
+  (main.AppView.new = function(opts) {
+    let $36creationLocationd_0dea112b090073317d4 = opts && '$creationLocationd_0dea112b090073317d4' in opts ? opts.$creationLocationd_0dea112b090073317d4 : null;
+    main.AppView.__proto__.new.call(this, {$creationLocationd_0dea112b090073317d4: $36creationLocationd_0dea112b090073317d4});
+    ;
+  }).prototype = main.AppView.prototype;
+  dart.addTypeTests(main.AppView);
+  dart.addTypeCaches(main.AppView);
+  dart.setMethodSignature(main.AppView, () => ({
+    __proto__: dart.getMethods(main.AppView.__proto__),
+    createState: dart.fnType(dart.legacy(main._AppViewState), [])
+  }));
+  dart.setLibraryUri(main.AppView, I[0]);
+  var _iniPosition = dart.privateName(main, "_iniPosition");
+  var _placeDistance = dart.privateName(main, "_placeDistance");
+  var _createPolylines = dart.privateName(main, "_createPolylines");
+  var _coordinateDistance = dart.privateName(main, "_coordinateDistance");
+  var _calculateDistance = dart.privateName(main, "_calculateDistance");
+  main._AppViewState = class _AppViewState extends framework.State$(dart.legacy(main.AppView)) {
+    showSheet(ctx) {
+      bottom_sheet.showModalBottomSheet(dart.dynamic, {context: ctx, builder: dart.fn(_ => new resultSheet.ResultSheet.new({$creationLocationd_0dea112b090073317d4: C[6] || CT.C6}), T.BuildContextLToResultSheetL())});
+    }
+    [_calculateDistance]() {
+      return async.async(T.boolL(), (function* _calculateDistance() {
+        try {
+          core.print(this.destAddress);
+          let startPlacemark = (yield geocoding.locationFromAddress(this.orgAddress));
+          let destinationPlacemark = (yield geocoding.locationFromAddress(this.destAddress));
+          core.print(destinationPlacemark);
+          if (startPlacemark != null && destinationPlacemark != null) {
+            let startCoordinates = this.orgAddress == this.currentAddress ? new position.Position.new({latitude: this.currentPosition.latitude, longitude: this.currentPosition.longitude}) : new position.Position.new({latitude: startPlacemark[$_get](0).latitude, longitude: startPlacemark[$_get](0).longitude});
+            let destinationCoordinates = new position.Position.new({latitude: destinationPlacemark[$_get](0).latitude, longitude: destinationPlacemark[$_get](0).longitude});
+            let startMarker = new marker.Marker.new({markerId: new marker.MarkerId.new(dart.str(startCoordinates)), position: new location.LatLng.new(startCoordinates.latitude, startCoordinates.longitude), infoWindow: new marker.InfoWindow.new({title: "Start", snippet: this.orgAddress}), icon: bitmap.BitmapDescriptor.defaultMarker});
+            let destinationMarker = new marker.Marker.new({markerId: new marker.MarkerId.new(dart.str(destinationCoordinates)), position: new location.LatLng.new(destinationCoordinates.latitude, destinationCoordinates.longitude), infoWindow: new marker.InfoWindow.new({title: "Destination", snippet: this.destAddress}), icon: bitmap.BitmapDescriptor.defaultMarker});
+            this.markers.add(startMarker);
+            this.markers.add(destinationMarker);
+            core.print("START COORDINATES: " + dart.str(startCoordinates));
+            core.print("DESTINATION COORDINATES: " + dart.str(destinationCoordinates));
+            let northeastCoordinates = null;
+            let southwestCoordinates = null;
+            let miny = dart.notNull(startCoordinates.latitude) <= dart.notNull(destinationCoordinates.latitude) ? startCoordinates.latitude : destinationCoordinates.latitude;
+            let minx = dart.notNull(startCoordinates.longitude) <= dart.notNull(destinationCoordinates.longitude) ? startCoordinates.longitude : destinationCoordinates.longitude;
+            let maxy = dart.notNull(startCoordinates.latitude) <= dart.notNull(destinationCoordinates.latitude) ? destinationCoordinates.latitude : startCoordinates.latitude;
+            let maxx = dart.notNull(startCoordinates.longitude) <= dart.notNull(destinationCoordinates.longitude) ? destinationCoordinates.longitude : startCoordinates.longitude;
+            core.print(maxx);
+            southwestCoordinates = new position.Position.new({latitude: miny, longitude: minx});
+            northeastCoordinates = new position.Position.new({latitude: maxy, longitude: maxx});
+            core.print(southwestCoordinates);
+            this.mapController.animateCamera(camera.CameraUpdate.newLatLngBounds(new location.LatLngBounds.new({northeast: new location.LatLng.new(northeastCoordinates.latitude, northeastCoordinates.longitude), southwest: new location.LatLng.new(southwestCoordinates.latitude, southwestCoordinates.longitude)}), 100.0));
+            yield this[_createPolylines](startCoordinates, destinationCoordinates);
+            let totalDistance = 0.0;
+            for (let i = 0; i < dart.notNull(this.polylineCoordinates[$length]) - 1; i = i + 1) {
+              totalDistance = totalDistance + dart.notNull(this[_coordinateDistance](this.polylineCoordinates[$_get](i).latitude, this.polylineCoordinates[$_get](i).longitude, this.polylineCoordinates[$_get](i + 1).latitude, this.polylineCoordinates[$_get](i + 1).longitude));
+            }
+            this.setState(dart.fn(() => {
+              this[_placeDistance] = totalDistance[$toStringAsFixed](2);
+              core.print("DISTANCE: " + dart.str(this[_placeDistance]) + " km");
+            }, T.VoidToNull()));
+            return true;
+          }
+        } catch (e$) {
+          let e = dart.getThrown(e$);
+          core.print(e);
+        }
+        return false;
+      }).bind(this));
+    }
+    [_createPolylines](start, destination) {
+      return async.async(dart.dynamic, (function* _createPolylines() {
+        this.polylinePoints = new flutter_polyline_points.PolylinePoints.new();
+        let result = (yield this.polylinePoints.getRouteBetweenCoordinates(api_key.Secrets.API_KEY, new PointLatLng.PointLatLng.new(start.latitude, start.longitude), new PointLatLng.PointLatLng.new(destination.latitude, destination.longitude), {travelMode: request_enums.TravelMode.transit}));
+        if (dart.test(result.points[$isNotEmpty])) {
+          result.points[$forEach](dart.fn(point => {
+            this.polylineCoordinates[$add](new location.LatLng.new(point.latitude, point.longitude));
+          }, T.PointLatLngLToNull()));
+        }
+        let id = new polyline$.PolylineId.new("poly");
+        let polyline = new polyline$.Polyline.new({polylineId: id, color: colors.Colors.red, points: this.polylineCoordinates, width: 3});
+        this.polylines[$_set](id, polyline);
+      }).bind(this));
+    }
+    [_coordinateDistance](lat1, lon1, lat2, lon2) {
+      let p = 0.017453292519943295;
+      let c = C[7] || CT.C7;
+      let a = 0.5 - dart.notNull(c(T.numL().as(dart.dsend(dart.dsend(lat2, '-', [lat1]), '*', [p])))) / 2 + dart.notNull(c(T.numL().as(dart.dsend(lat1, '*', [p])))) * dart.notNull(c(T.numL().as(dart.dsend(lat2, '*', [p])))) * (1 - dart.notNull(c(T.numL().as(dart.dsend(dart.dsend(lon2, '-', [lon1]), '*', [p]))))) / 2;
+      return 12742 * math.asin(math.sqrt(a));
+    }
+    submitData() {
+      return async.async(dart.void, (function* submitData() {
+        this.orgAddress = this.orgController.text;
+        this.destAddress = this.destController.text;
+        core.print(this.destAddress);
+        if (this.orgAddress !== "" && this.destAddress !== "") {
+          this.orgNode.unfocus();
+          this.destNode.unfocus();
+          this.setState(dart.fn(() => {
+            if (dart.test(this.markers[$isNotEmpty])) this.markers.clear();
+            if (dart.test(this.polylines[$isNotEmpty])) this.polylines[$clear]();
+            if (dart.test(this.polylineCoordinates[$isNotEmpty])) this.polylineCoordinates[$clear]();
+            this[_placeDistance] = null;
+          }, T.VoidToNull()));
+          this[_calculateDistance]().then(core.Null, dart.fn(isCalculated => {
+            if (dart.test(isCalculated)) {
+              scaffold.ScaffoldMessenger.of(this.context).showSnackBar(new snack_bar.SnackBar.new({content: new text.Text.new("See Results", {$creationLocationd_0dea112b090073317d4: C[8] || CT.C8}), $creationLocationd_0dea112b090073317d4: C[11] || CT.C11}));
+            } else {
+              scaffold.ScaffoldMessenger.of(this.context).showSnackBar(new snack_bar.SnackBar.new({content: new text.Text.new("Error..!!Try Again.", {$creationLocationd_0dea112b090073317d4: C[14] || CT.C14}), $creationLocationd_0dea112b090073317d4: C[17] || CT.C17}));
+            }
+          }, T.boolLToNull())).then(dart.void, dart.fn(infoRc => this.showSheet(this.context), T.ObjectLTovoid()));
+        } else {
+          return null;
+        }
+      }).bind(this));
+    }
+    getAddress() {
+      return async.async(dart.dynamic, (function* getAddress() {
+        try {
+          let p = (yield geocoding.placemarkFromCoordinates(this.currentPosition.latitude, this.currentPosition.longitude));
+          let place = p[$_get](0);
+          this.setState(dart.fn(() => {
+            this.currentAddress = dart.str(place.name) + ", " + dart.str(place.locality) + ", " + dart.str(place.postalCode) + ", " + dart.str(place.country);
+            this.orgController.text = this.currentAddress;
+            this.orgAddress = this.currentAddress;
+            core.print(this.orgAddress);
+            core.print("ADRESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs");
+          }, T.VoidToNull()));
+        } catch (e$) {
+          let e = dart.getThrown(e$);
+          core.print(e);
+        }
+      }).bind(this));
+    }
+    getCurrentLocation() {
+      return async.async(dart.void, (function* getCurrentLocation() {
+        yield geolocator.Geolocator.getCurrentPosition({desiredAccuracy: location_accuracy.LocationAccuracy.high}).then(core.Null, dart.fn(position => async.async(core.Null, (function*() {
+          this.setState(dart.fn(() => {
+            this.currentPosition = position;
+            this.mapController.animateCamera(camera.CameraUpdate.newCameraPosition(new camera.CameraPosition.new({target: new location.LatLng.new(this.currentPosition.latitude, this.currentPosition.longitude), zoom: 18.0})));
+          }, T.VoidToNull()));
+          yield this.getAddress();
+        }).bind(this)), T.PositionLToFutureLOfNull())).catchError(dart.fn(e => {
+          core.print(e);
+        }, T.dynamicToNull()));
+      }).bind(this));
+    }
+    initState() {
+      super.initState();
+      this.getCurrentLocation();
+    }
+    build(context) {
+      return new container.Container.new({height: media_query.MediaQuery.of(context).size.height, width: media_query.MediaQuery.of(context).size.width, child: new scaffold.Scaffold.new({body: new basic.Stack.new({children: T.JSArrayOfWidgetL().of([new google_maps_flutter.GoogleMap.new({markers: this.markers != null ? T.LinkedHashSetOfMarkerL().from(this.markers) : null, initialCameraPosition: this[_iniPosition], myLocationButtonEnabled: false, myLocationEnabled: true, mapType: ui.MapType.normal, zoomGesturesEnabled: true, zoomControlsEnabled: false, polylines: T.LinkedHashSetOfPolylineL().of(this.polylines[$values]), onMapCreated: dart.fn(controller => {
+                  this.mapController = controller;
+                }, T.GoogleMapControllerLToNull()), $creationLocationd_0dea112b090073317d4: C[20] || CT.C20}), new input_box.InputBox.new(dart.bind(this, 'submitData'), this.orgController, this.destController, this.currentAddress, this.orgNode, this.destNode, {$creationLocationd_0dea112b090073317d4: C[31] || CT.C31})]), $creationLocationd_0dea112b090073317d4: C[39] || CT.C39}), $creationLocationd_0dea112b090073317d4: C[42] || CT.C42}), $creationLocationd_0dea112b090073317d4: C[45] || CT.C45});
+    }
+  };
+  (main._AppViewState.new = function() {
+    this.markers = T.LinkedHashSetOfMarkerL().new();
+    this.currentPosition = null;
+    this[_iniPosition] = new camera.CameraPosition.new({target: new location.LatLng.new(0.0, 0.0)});
+    this.mapController = null;
+    this.orgAddress = "";
+    this.destAddress = "";
+    this.currentAddress = null;
+    this.orgController = new editable_text.TextEditingController.new();
+    this.destController = new editable_text.TextEditingController.new();
+    this.orgNode = new focus_manager.FocusNode.new();
+    this.destNode = new focus_manager.FocusNode.new();
+    this[_placeDistance] = null;
+    this.polylinePoints = null;
+    this.polylines = new (T.LinkedMapOfPolylineIdL$PolylineL()).new();
+    this.polylineCoordinates = T.JSArrayOfLatLngL().of([]);
+    main._AppViewState.__proto__.new.call(this);
+    ;
+  }).prototype = main._AppViewState.prototype;
+  dart.addTypeTests(main._AppViewState);
+  dart.addTypeCaches(main._AppViewState);
+  dart.setMethodSignature(main._AppViewState, () => ({
+    __proto__: dart.getMethods(main._AppViewState.__proto__),
+    showSheet: dart.fnType(dart.void, [dart.legacy(framework.BuildContext)]),
+    [_calculateDistance]: dart.fnType(dart.legacy(async.Future$(dart.legacy(core.bool))), []),
+    [_createPolylines]: dart.fnType(dart.dynamic, [dart.legacy(position.Position), dart.legacy(position.Position)]),
+    [_coordinateDistance]: dart.fnType(dart.legacy(core.double), [dart.dynamic, dart.dynamic, dart.dynamic, dart.dynamic]),
+    submitData: dart.fnType(dart.void, []),
+    getAddress: dart.fnType(dart.dynamic, []),
+    getCurrentLocation: dart.fnType(dart.void, []),
+    build: dart.fnType(dart.legacy(framework.Widget), [dart.legacy(framework.BuildContext)])
+  }));
+  dart.setLibraryUri(main._AppViewState, I[0]);
+  dart.setFieldSignature(main._AppViewState, () => ({
+    __proto__: dart.getFields(main._AppViewState.__proto__),
+    markers: dart.fieldType(dart.legacy(core.Set$(dart.legacy(marker.Marker)))),
+    currentPosition: dart.fieldType(dart.legacy(position.Position)),
+    [_iniPosition]: dart.fieldType(dart.legacy(camera.CameraPosition)),
+    mapController: dart.fieldType(dart.legacy(google_maps_flutter.GoogleMapController)),
+    orgAddress: dart.fieldType(dart.legacy(core.String)),
+    destAddress: dart.fieldType(dart.legacy(core.String)),
+    currentAddress: dart.fieldType(dart.legacy(core.String)),
+    orgController: dart.finalFieldType(dart.legacy(editable_text.TextEditingController)),
+    destController: dart.finalFieldType(dart.legacy(editable_text.TextEditingController)),
+    orgNode: dart.finalFieldType(dart.legacy(focus_manager.FocusNode)),
+    destNode: dart.finalFieldType(dart.legacy(focus_manager.FocusNode)),
+    [_placeDistance]: dart.fieldType(dart.legacy(core.String)),
+    polylinePoints: dart.fieldType(dart.legacy(flutter_polyline_points.PolylinePoints)),
+    polylines: dart.fieldType(dart.legacy(core.Map$(dart.legacy(polyline$.PolylineId), dart.legacy(polyline$.Polyline)))),
+    polylineCoordinates: dart.fieldType(dart.legacy(core.List$(dart.legacy(location.LatLng))))
+  }));
+  main.main = function main$() {
+    return binding.runApp(new main.MyApp.new({$creationLocationd_0dea112b090073317d4: C[50] || CT.C50}));
+  };
+  dart.trackLibraries("packages/rc_app/main.dart", {
+    "package:rc_app/main.dart": main
+  }, {
+  }, '{"version":3,"sourceRoot":"","sources":["main.dart"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;UAc4B;AACxB,YAAO,iCAAmB,gBAAgB;IAC5C;;;;;;EACF;;;;;;;;;;AAIiC;IAAe;;;;;;EAChD;;;;;;;;;;;;;;cAwB8B;AAKpB,MAJN,0DACa,GAAG,WACH,QAAC,KACD;IAEf;;AAE+B;AAC7B;AAEoB,UAAlB,WAAM;AACS,gCAAiB,MAAM,8BAAoB;AAC3C,sCACX,MAAM,8BAAoB;AACH,UAA3B,WAAM,oBAAoB;AAC1B,cAAI,AAAe,cAAD,YAAY,AAAqB,oBAAD;AACvC,mCAAmB,AAAW,mBAAG,sBAEpC,qCACY,AAAgB,0CACf,AAAgB,mCAE7B,qCACY,AAAc,AAAI,cAAJ,QAAC,wBACd,AAAc,AAAI,cAAJ,QAAC;AAEzB,yCAAyB,qCACpB,AAAoB,AAAI,oBAAJ,QAAC,wBACpB,AAAoB,AAAI,oBAAJ,QAAC;AAC7B,8BAAc,iCACT,wBAA4B,SAAjB,gBAAgB,cAC3B,wBACR,AAAiB,gBAAD,WAChB,AAAiB,gBAAD,yBAEN,kCACH,kBACE,yBAEY;AAGlB,oCAAoB,iCACf,wBAAkC,SAAvB,sBAAsB,cACjC,wBACR,AAAuB,sBAAD,WACtB,AAAuB,sBAAD,yBAEZ,kCACH,wBACE,0BAEY;AAGD,YAAxB,AAAQ,iBAAI,WAAW;AACO,YAA9B,AAAQ,iBAAI,iBAAiB;AACgB,YAA7C,WAAM,AAAsC,iCAAjB,gBAAgB;AACc,YAAzD,WAAM,AAAkD,uCAAvB,sBAAsB;AAE9C;AACA;AAEF,uBACwB,aAA1B,AAAiB,gBAAD,2BAAa,AAAuB,sBAAD,aAC9C,AAAiB,gBAAD,YAChB,AAAuB,sBAAD;AACzB,uBACyB,aAA3B,AAAiB,gBAAD,4BAAc,AAAuB,sBAAD,cAC/C,AAAiB,gBAAD,aAChB,AAAuB,sBAAD;AACzB,uBACwB,aAA1B,AAAiB,gBAAD,2BAAa,AAAuB,sBAAD,aAC9C,AAAuB,sBAAD,YACtB,AAAiB,gBAAD;AACnB,uBACyB,aAA3B,AAAiB,gBAAD,4BAAc,AAAuB,sBAAD,cAC/C,AAAuB,sBAAD,aACtB,AAAiB,gBAAD;AACf,YAAX,WAAM,IAAI;AAEsD,YAAhE,uBAAuB,qCAAmB,IAAI,aAAa,IAAI;AAEC,YAAhE,uBAAuB,qCAAmB,IAAI,aAAa,IAAI;AACpC,YAA3B,WAAM,oBAAoB;AAezB,YAdD,AAAc,iCACC,oCACX,0CACa,wBACT,AAAqB,oBAAD,WACpB,AAAqB,oBAAD,wBAEX,wBACT,AAAqB,oBAAD,WACpB,AAAqB,oBAAD,eAGxB;AAI4D,YAAhE,MAAM,uBAAiB,gBAAgB,EAAE,sBAAsB;AAExD,gCAAgB;AACvB,qBAAS,IAAI,GAAG,AAAE,CAAD,GAA8B,aAA3B,AAAoB,qCAAS,GAAG,IAAA,AAAC,CAAA;AAMlD,cALD,gBAAA,AAAc,aAAD,gBAAI,0BACf,AAAmB,AAAI,gCAAH,CAAC,YACrB,AAAmB,AAAI,gCAAH,CAAC,aACrB,AAAmB,AAAQ,gCAAP,AAAE,CAAD,GAAG,aACxB,AAAmB,AAAQ,gCAAP,AAAE,CAAD,GAAG;;AAO1B,YAHF,cAAS;AAC0C,cAAjD,uBAAiB,AAAc,aAAD,mBAAiB;AACV,cAArC,WAAM,AAA8B,wBAAlB,wBAAc;;AAGlC,kBAAO;;;cAEF;AACC,UAAR,WAAM,CAAC;;AAET,cAAO;MACT;;uBAE0B,OAAgB;AAA1B;AACmB,QAAjC,sBAAiB;AACF,sBAAS,MAAM,AAAe,+CACnC,yBACR,gCAAY,AAAM,KAAD,WAAW,AAAM,KAAD,aACjC,gCAAY,AAAY,WAAD,WAAW,AAAY,WAAD,0BACtB;AAGzB,sBAAI,AAAO,AAAO,MAAR;AAGN,UAFF,AAAO,AAAO,MAAR,kBAAgB,QAAa;AAC+B,YAAhE,AAAoB,+BAAI,wBAAO,AAAM,KAAD,WAAW,AAAM,KAAD;;;AAI7C,iBAAK,6BAAW;AAClB,uBAAW,wCACN,EAAE,SACA,2BACN,iCACD;AAEe,QAAxB,AAAS,sBAAC,EAAE,EAAI,QAAQ;MAC1B;;0BAE2B,MAAM,MAAM,MAAM;AACvC,cAAI;AACJ;AACA,cAAI,AAAI,AACiB,MAAJ,aAArB,AAAC,CAAA,aAAe,WAAR,WAAL,IAAI,QAAG,IAAI,UAAI,CAAC,QAAI,IACX,AAAc,AAA6B,aAAvD,AAAC,CAAA,aAAM,WAAL,IAAI,QAAG,CAAC,qBAAI,AAAC,CAAA,aAAM,WAAL,IAAI,QAAG,CAAC,SAAK,AAAE,iBAAE,AAAC,CAAA,aAAe,WAAR,WAAL,IAAI,QAAG,IAAI,UAAI,CAAC,SAAK;AAC7D,YAAO,AAAM,SAAE,UAAK,UAAK,CAAC;IAC5B;;AAEe;AACkB,QAA/B,kBAAa,AAAc;AACM,QAAjC,mBAAc,AAAe;AACX,QAAlB,WAAM;AACN,YAAI,AAAW,oBAAG,MAAM,AAAY,qBAAG;AACpB,UAAjB,AAAQ;AACU,UAAlB,AAAS;AAMP,UALF,cAAS;AACP,0BAAI,AAAQ,4BAAY,AAAQ,AAAO;AACvC,0BAAI,AAAU,8BAAY,AAAU,AAAO;AAC3C,0BAAI,AAAoB,wCAAY,AAAoB,AAAO;AAC1C,YAArB,uBAAiB;;AAgBoB,UAdvC,AAAqB,AAclB,2CAduB,QAAC;AACzB,0BAAI,YAAY;AAKb,cAJiB,AAAY,8BAAT,2BACnB,qCACW,kBAAK;;AAQjB,cAJiB,AAAY,8BAAT,2BACnB,qCACW,kBAAK;;+CAId,QAAC,UAAW,eAAU;;AAE9B,gBAAO;;MAEX;;;AAEU;AACR;AACkB,mBAAI,MAAM,mCACtB,AAAgB,+BAAU,AAAgB;AACpC,sBAAQ,AAAC,CAAA,QAAC;AASlB,UARF,cAAS;AAEsE,YAD7E,sBAC6E,SAAtE,AAAM,KAAD,SAAM,gBAAI,AAAM,KAAD,aAAU,gBAAI,AAAM,KAAD,eAAY,gBAAI,AAAM,KAAD;AAChC,YAAnC,AAAc,0BAAO;AACM,YAA3B,kBAAa;AACI,YAAjB,WAAM;AAE4E,YADlF,WACI;;;cAEC;AACC,UAAR,WAAM,CAAC;;MAEX;;;AAEuB;AAcnB,QAbF,MAAiB,AACZ,AAUF,2DAXmE,0DAC5D,QAAU;AAQhB,UAPF,cAAS;AACmB,YAA1B,uBAAkB,QAAQ;AAKvB,YAJH,AACK,iCAA2B,sCAAkB,uCACxC,wBAAO,AAAgB,+BAAU,AAAgB,uCACnD;;AAGQ,UAAlB,MAAM;QACP,0DAAa,QAAC;AACL,UAAR,WAAM,CAAC;;MAEX;;;AAImB,MAAX;AACc,MAApB;IACF;UAG0B;AACxB,YAAO,sCACc,AAAY,AAAK,0BAAd,OAAO,sBACX,AAAY,AAAK,0BAAd,OAAO,qBACrB,iCACG,+BACE,yBACR,gDACW,AAAQ,uBAAU,gCAAiB,gBAAW,6BAChC,6CACE,0BACN,eACF,wCACI,2BACA,kBACV,gCAAiB,AAAU,wCACxB,QAAqB;AACP,kBAA1B,qBAAgB,UAAU;+GAG9B,qCAAS,qBAAY,oBAAe,qBAAgB,qBAChD,cAAS;IAIrB;;;IA3RY,eAAU;IACb;IACM,qBAAe,uCAAuB,wBAAO,KAAK;IAC7C;IAEb,kBAAa;IACb,mBAAc;IACd;IAED,qBAAgB;IAChB,sBAAiB;IAEjB,eAAU;IACV,gBAAW;IAEV;IAEQ;IACW,iBAAY;IACzB,2BAAsB;;;EAyQrC;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AA3Se,0BAAO;EAAQ","file":"../../../../packages/rc_app/main.dart.lib.js"}');
+  // Exports:
+  return {
+    main: main
+  };
+}));
+
+//# sourceMappingURL=main.dart.lib.js.map
