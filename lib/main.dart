@@ -27,6 +27,7 @@ class AppView extends StatefulWidget {
 
 class _AppViewState extends State<AppView> {
   Set<Marker> markers = {};
+  Set<Marker> userMarkers = {};
   Set<Marker> rcMarkers = {
     Marker(
       markerId: MarkerId(''),
@@ -38,6 +39,7 @@ class _AppViewState extends State<AppView> {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
     ),
   };
+
   Position currentPosition;
   CameraPosition _iniPosition = CameraPosition(target: LatLng(0.0, 0.0));
   GoogleMapController mapController;
@@ -320,7 +322,7 @@ class _AppViewState extends State<AppView> {
             },
           ),
           InputBox(submitData, orgController, destController, currentAddress,
-              orgNode, destNode),
+              orgNode, destNode, userMarkers, currentPosition),
         ],
       )),
     );
