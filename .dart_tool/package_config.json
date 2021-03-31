@@ -2,6 +2,18 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "archive",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/archive-3.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "args",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/args-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "async",
       "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/async-2.5.0",
       "packageUri": "lib/",
@@ -38,8 +50,20 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "crypto",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/crypto-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "cupertino_icons",
       "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/cupertino_icons-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "dio",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dio-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -52,6 +76,18 @@
     {
       "name": "flutter",
       "rootUri": "file:///C:/fsrc/flutter/packages/flutter",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_launcher_icons",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.9.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_native_splash",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_native_splash-1.1.5+1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -140,6 +176,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "image",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/image-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "js",
       "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/js-0.6.3",
       "packageUri": "lib/",
@@ -170,10 +212,22 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "petitparser",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/petitparser-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "plugin_platform_interface",
       "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/plugin_platform_interface-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "sklite",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/sklite-0.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
     },
     {
       "name": "sky_engine",
@@ -236,13 +290,25 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "xml",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/xml-5.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "yaml",
+      "rootUri": "file:///C:/Users/prnav/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/yaml-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "rc_app",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-03-24T11:39:04.758513Z",
+  "generated": "2021-03-31T08:37:32.884722Z",
   "generator": "pub",
   "generatorVersion": "2.12.1"
 }

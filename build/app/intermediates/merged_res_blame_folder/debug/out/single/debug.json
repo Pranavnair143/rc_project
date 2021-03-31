@@ -20,6 +20,10 @@
         "source": "C:\\fsrc\\f_projects\\rc_app\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
+        "merged": "C:\\fsrc\\f_projects\\rc_app\\build\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_train.png.flat",
+        "source": "C:\\fsrc\\f_projects\\rc_app\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\train.png"
+    },
+    {
         "merged": "C:\\fsrc\\f_projects\\rc_app\\build\\app\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher.png.flat",
         "source": "C:\\fsrc\\f_projects\\rc_app\\android\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
     },

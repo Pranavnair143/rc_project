@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'add_marker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -28,13 +27,6 @@ class InputBox extends StatefulWidget {
 }
 
 class _InputBoxState extends State<InputBox> {
-  void addUserMarker(BuildContext context) {
-    print('HELLOOOO');
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return AddMarker(widget.markers);
-    }));
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -42,15 +34,14 @@ class _InputBoxState extends State<InputBox> {
       alignment: Alignment.topCenter,
       child: Column(
         children: [
-          TextButton(
-              onPressed: () => addUserMarker(context), child: Text('Add Mark')),
-          TextButton(onPressed: widget.submitData, child: Text('Submit')),
           Container(
             padding: EdgeInsets.all(15),
             child: TextField(
               onSubmitted: (_) => widget.submitData,
               controller: widget.orgController,
               decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
                   focusColor: Colors.red,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
@@ -76,6 +67,8 @@ class _InputBoxState extends State<InputBox> {
               onSubmitted: (_) => widget.submitData,
               controller: widget.destController,
               decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25.0),
                   borderSide: BorderSide(),
@@ -85,6 +78,9 @@ class _InputBoxState extends State<InputBox> {
               focusNode: widget.destNode,
             ),
           ),
+          Container(
+              child: ElevatedButton(
+                  onPressed: widget.submitData, child: Text('Check'))),
         ],
       ),
     ));

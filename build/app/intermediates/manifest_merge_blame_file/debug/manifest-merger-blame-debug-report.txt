@@ -41,7 +41,7 @@
 27-->C:\fsrc\f_projects\rc_app\android\app\src\main\AndroidManifest.xml:7:9-8:73
 28            android:name="com.google.android.geo.API_KEY"
 28-->C:\fsrc\f_projects\rc_app\android\app\src\main\AndroidManifest.xml:7:20-65
-29            android:value="AIzaSyA0Q7iO9K4FFsZroIfXwSC-QiLLRoxIHnA" />
+29            android:value="AIzaSyAlDx57d3FsEqr4SJfykYrTOtdflQTWTjo" />
 29-->C:\fsrc\f_projects\rc_app\android\app\src\main\AndroidManifest.xml:8:16-71
 30
 31        <activity

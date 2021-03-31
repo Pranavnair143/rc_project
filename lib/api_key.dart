@@ -1,3 +1,3 @@
 class Secrets {
-  static const API_KEY = '*******';
+  static const API_KEY = '********************';
 }
