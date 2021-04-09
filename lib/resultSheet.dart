@@ -166,29 +166,30 @@ class _ResultSheetState extends State<ResultSheet> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: (widget.results['WaitingTime'] != null)
-                          ? Colors.red
-                          : Colors.lightGreen),
-                  padding: EdgeInsets.all(20),
-                  child: (widget.results['includesGate'] == 0)
-                      ? Text(
-                          'Free to go',
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )
-                      : (widget.results['WaitingTime'] != null)
-                          ? Text(
-                              'Wait for ${widget.results['WaitingTime']} minutes',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                              textAlign: TextAlign.center)
-                          : Text('Free to go',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                              textAlign: TextAlign.center))
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: (widget.results['WaitingTime'] != null)
+                        ? Colors.red
+                        : Colors.lightGreen),
+                padding: EdgeInsets.all(20),
+                child: (widget.results['includesGate'] == 0)
+                    ? Text(
+                        'Free to go',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                        textAlign: TextAlign.center,
+                      )
+                    : (widget.results['WaitingTime'] != null)
+                        ? Text(
+                            'Wait for ${widget.results['WaitingTime']} minutes',
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                            textAlign: TextAlign.center)
+                        : Text(
+                            'Free to go',
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+              )
             ],
           )
         ],

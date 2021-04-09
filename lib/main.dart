@@ -9,9 +9,10 @@ import 'dart:math' show Point;
 import 'resultSheet.dart';
 import 'api_key.dart';
 import 'input_box.dart';
-import 'distCalc.dart';
 import 'add_marker.dart';
+import 'distCalc.dart';
 
+import 'package:dio/dio.dart';
 //MODELS
 import 'ml_models/model1_cf.dart' as onecf;
 import 'ml_models/model1_rg.dart' as onerg;
@@ -64,7 +65,7 @@ class _AppViewState extends State<AppView> {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
     ),
     Marker(
-      markerId: MarkerId('B'),
+      markerId: MarkerId('A'),
       position: LatLng(23.0682255, 70.1310453),
       infoWindow: InfoWindow(
         title: 'Meghpar Railway Crossing',
@@ -73,7 +74,7 @@ class _AppViewState extends State<AppView> {
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
     ),
     Marker(
-      markerId: MarkerId('C'),
+      markerId: MarkerId('A'),
       position: LatLng(23.065036799999998, 70.12660079999999),
       infoWindow: InfoWindow(
         title: 'Lilashah Railway Crossing',
@@ -98,7 +99,7 @@ class _AppViewState extends State<AppView> {
   String resOrgAddress = '';
   String resDestAddress = '';
   Map<dynamic, dynamic> infos = {};
-
+  Map<dynamic, dynamic> sheetInfos = {};
   final orgController = TextEditingController();
   final destController = TextEditingController();
 
@@ -110,8 +111,8 @@ class _AppViewState extends State<AppView> {
   List<LatLng> polylineCoordinates = [];
   List<Point> polylinePoint = [];
 
-  void showSheet(BuildContext ctx, Map infoRc) {
-    print(infoRc);
+  void showSheet(BuildContext ctx, Position startCoordinates,
+      Position destinationCoordinates) {
     showModalBottomSheet(
         context: ctx,
         shape: RoundedRectangleBorder(
@@ -120,12 +121,47 @@ class _AppViewState extends State<AppView> {
                 topRight: const Radius.circular(10))),
         backgroundColor: Colors.white,
         builder: (_) {
-          return ResultSheet(infoRc);
+          return FutureBuilder(
+              future: coreFunc(startCoordinates, destinationCoordinates),
+              builder:
+                  (context, AsyncSnapshot<Map<dynamic, dynamic>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ResultSheet(snapshot.data);
+                } else {
+                  return Container(
+                      child: Center(child: Text('Loading')),
+                      padding: EdgeInsets.all(100));
+                }
+              });
         });
   }
 
-  Future<Map<dynamic, dynamic>> coreFunc(Map<dynamic, dynamic> data,
+  Future<Map<dynamic, dynamic>> coreFunc(
       Position startCoordinates, Position endCoordinates) async {
+    var response = await Dio().get(
+        'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startCoordinates.latitude},${startCoordinates.longitude}&destinations=${endCoordinates.latitude}%2C${endCoordinates.longitude}&key=${Secrets.API_KEY}');
+    String resDestAddress =
+        response.data['destination_addresses'][0].toString();
+    String resOrgAddress = response.data['origin_addresses'][0].toString();
+    int totalDistance =
+        response.data['rows'][0]['elements'][0]['distance']['value'];
+    int totalDuration =
+        response.data['rows'][0]['elements'][0]['duration']['value'];
+    String tdistStr =
+        response.data['rows'][0]['elements'][0]['distance']['text'];
+    String tdurStr =
+        response.data['rows'][0]['elements'][0]['duration']['text'];
+    print(resOrgAddress);
+    Map<dynamic, dynamic> data = {
+      'DestAddress': resDestAddress,
+      'OrgAddress': resOrgAddress,
+      'Distance': totalDistance,
+      'Duration': totalDuration,
+      'distText': tdistStr,
+      'durText': tdurStr
+    };
+    print('pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp');
+
     int checkOn;
     Marker rcPoint;
     for (var i = 0; i < rcMarkers.length; i++) {
@@ -147,70 +183,76 @@ class _AppViewState extends State<AppView> {
     if (rcPoint != null) {
       // ignore: missing_required_param
       data['includesGate'] = 1;
-      distCalc(
+      /*await distCalc(
               startCoordinates,
               // ignore: missing_required_param
               Position(
                   latitude: rcPoint.position.latitude,
                   longitude: rcPoint.position.longitude))
           .then((bp) {
-        print(bp);
-        DateTime reach = startTime.add(Duration(seconds: bp['Duration']));
-        print(reach);
-        List<double> lp = [
+        print(bp);*/
+      var response = await Dio().get(
+          'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startCoordinates.latitude},${startCoordinates.longitude}&destinations=${rcPoint.position.latitude}%2C${rcPoint.position.longitude}&key=${Secrets.API_KEY}');
+      int totalDuration =
+          response.data['rows'][0]['elements'][0]['duration']['value'];
+      DateTime reach = startTime.add(Duration(seconds: totalDuration));
+      print(reach);
+      /*List<double> lp = [
           reach.day.toDouble(),
           reach.hour.toDouble(),
           reach.minute.toDouble(),
           0
-        ];
-        List<double> cfResult;
-        cfResult = onecf.score(lp);
-        print(cfResult);
-        if (cfResult[0] > cfResult[1]) {
-          data['gateStatus'] = 0;
-        } else {
-          data['gateStatus'] = 1;
-          data['WaitingTime'] = onerg.score(lp).floor();
-        }
-        if (rcPoint.markerId == MarkerId('B')) {
-          cfResult = twocf.score(lp);
-          if (cfResult[0] > cfResult[1]) {
-            data['gateStatus'] = 0;
-          } else {
-            data['gateStatus'] = 1;
-            data['waitingTime'] = tworg.score(lp);
-          }
-        } else if (rcPoint.markerId == MarkerId('C')) {
-          cfResult = threecf.score(lp);
-          if (cfResult[0] > cfResult[1]) {
-            data['gateStatus'] = 0;
-          } else {
-            data['gateStatus'] = 1;
-            data['waitingTime'] = threerg.score(lp);
-          }
-        } else if (rcPoint.markerId == MarkerId('D')) {
-          cfResult = fourcf.score(lp);
-          if (cfResult[0] > cfResult[1]) {
-            data['gateStatus'] = 0;
-          } else {
-            data['gateStatus'] = 1;
-            data['waitingTime'] = fourrg.score(lp);
-          }
-        } else if (rcPoint.markerId == MarkerId('E')) {
-          cfResult = fivecf.score(lp);
-          if (cfResult[0] > cfResult[1]) {
-            data['gateStatus'] = 0;
-          } else {
-            data['gateStatus'] = 1;
-            data['waitingTime'] = fiverg.score(lp);
-          }
-        }
-      });
+        ];*/
+      List<double> lp = [15, 11, 29, 0];
+      List<double> cfResult;
+      cfResult = onecf.score(lp);
+      print(cfResult);
+      print('sssssssssssssssssss');
+      if (cfResult[0] > cfResult[1]) {
+        data['gateStatus'] = 0;
+      } else {
+        data['gateStatus'] = 1;
+        data['WaitingTime'] = onerg.score(lp).floor();
+      }
+      print(data['WaitingTime']);
+      /*if (rcPoint.markerId == MarkerId('B')) {
+            cfResult = twocf.score(lp);
+            if (cfResult[0] > cfResult[1]) {
+              data['gateStatus'] = 0;
+            } else {
+              data['gateStatus'] = 1;
+              data['waitingTime'] = tworg.score(lp);
+            }
+          } else if (rcPoint.markerId == MarkerId('C')) {
+            cfResult = threecf.score(lp);
+            if (cfResult[0] > cfResult[1]) {
+              data['gateStatus'] = 0;
+            } else {
+              data['gateStatus'] = 1;
+              data['waitingTime'] = threerg.score(lp);
+            }
+          } else if (rcPoint.markerId == MarkerId('D')) {
+            cfResult = fourcf.score(lp);
+            if (cfResult[0] > cfResult[1]) {
+              data['gateStatus'] = 0;
+            } else {
+              data['gateStatus'] = 1;
+              data['waitingTime'] = fourrg.score(lp);
+            }
+          } else if (rcPoint.markerId == MarkerId('E')) {
+            cfResult = fivecf.score(lp);
+            if (cfResult[0] > cfResult[1]) {
+              data['gateStatus'] = 0;
+            } else {
+              data['gateStatus'] = 1;
+              data['waitingTime'] = fiverg.score(lp);
+            }
+          }*/
+      return data;
     } else {
       data['includesGate'] = 0;
+      return data;
     }
-    print(data);
-    return data;
   }
 
   Future<bool> _calculateDistance() async {
@@ -322,10 +364,7 @@ class _AppViewState extends State<AppView> {
           }
         }
 
-        await distCalc(startCoordinates, destinationCoordinates)
-            .then((value) =>
-                coreFunc(value, startCoordinates, destinationCoordinates))
-            .then((value) => showSheet(context, value));
+        showSheet(context, startCoordinates, destinationCoordinates);
         return true;
       }
     } catch (e) {
@@ -356,7 +395,9 @@ class _AppViewState extends State<AppView> {
       points: polylineCoordinates,
       width: 3,
     );
-    polylines[id] = polyline;
+    setState(() {
+      polylines[id] = polyline;
+    });
   }
 
   void submitData() async {
