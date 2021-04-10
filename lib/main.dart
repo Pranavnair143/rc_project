@@ -15,6 +15,10 @@ import 'package:dio/dio.dart';
 //MODELS
 import 'ml_models/model1_cf.dart' as onecf;
 import 'ml_models/model1_rg.dart' as onerg;
+//we have used one time series transpiled model due to slow loading of app
+//rest of the distinct models are as followed
+//
+//
 //import 'ml_models/model2_cf.dart' as twocf;
 // ignore: unused_import
 //import 'ml_models/model2_rg.dart' as tworg;
@@ -45,7 +49,18 @@ class AppView extends StatefulWidget {
 
 class _AppViewState extends State<AppView> {
   Set<Marker> markers = {};
-  BitmapDescriptor myIcon;
+  Set<Marker> rcMarkers = {
+    Marker(
+      markerId: MarkerId('Dummy'),
+      position: LatLng(73.072897226544825, 70.11426513723994),
+      infoWindow: InfoWindow(
+        title: '',
+        snippet: '',
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      visible: false,
+    ),
+  };
   Set<Marker> userMarkers = {
     Marker(
       markerId: MarkerId('Dummy'),
@@ -58,6 +73,45 @@ class _AppViewState extends State<AppView> {
       visible: false,
     ),
   };
+  BitmapDescriptor customIcon1;
+  BitmapDescriptor customIcon2;
+  BitmapDescriptor customIcon3;
+
+  createMarker1(context) {
+    if (customIcon1 == null) {
+      BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 3.2), 'assets/rc_gate.png')
+          .then((icon) {
+        setState(() {
+          customIcon1 = icon;
+        });
+      });
+    }
+  }
+
+  createMarker2(context) {
+    if (customIcon2 == null) {
+      BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 3.2), 'assets/rc_gate.png')
+          .then((icon) {
+        setState(() {
+          customIcon2 = icon;
+        });
+      });
+    }
+  }
+
+  createMarker3(context) {
+    if (customIcon3 == null) {
+      BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 3.2), 'assets/rc_gate.png')
+          .then((icon) {
+        setState(() {
+          customIcon3 = icon;
+        });
+      });
+    }
+  }
 
   void addUserMarker(BuildContext context) async {
     final Set<Marker> newlyAdded = await Navigator.push(
@@ -148,7 +202,6 @@ class _AppViewState extends State<AppView> {
       'distText': tdistStr,
       'durText': tdurStr
     };
-    print('pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp');
 
     int checkOn;
     Marker rcPoint;
@@ -171,31 +224,22 @@ class _AppViewState extends State<AppView> {
     if (rcPoint != null) {
       // ignore: missing_required_param
       data['includesGate'] = 1;
-      /*await distCalc(
-              startCoordinates,
-              // ignore: missing_required_param
-              Position(
-                  latitude: rcPoint.position.latitude,
-                  longitude: rcPoint.position.longitude))
-          .then((bp) {
-        print(bp);*/
       var response = await Dio().get(
           'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startCoordinates.latitude},${startCoordinates.longitude}&destinations=${rcPoint.position.latitude}%2C${rcPoint.position.longitude}&key=${Secrets.API_KEY}');
       int totalDuration =
           response.data['rows'][0]['elements'][0]['duration']['value'];
       DateTime reach = startTime.add(Duration(seconds: totalDuration));
       print(reach);
-      /*List<double> lp = [
-          reach.day.toDouble(),
-          reach.hour.toDouble(),
-          reach.minute.toDouble(),
-          0
-        ];*/
-      List<double> lp = [15, 11, 29, 0];
+      List<double> lp = [
+        reach.day.toDouble(),
+        reach.hour.toDouble(),
+        reach.minute.toDouble(),
+        0
+      ];
+      //List<double> lp = [15, 11, 29, 0];
       List<double> cfResult;
       cfResult = onecf.score(lp);
       print(cfResult);
-      print('sssssssssssssssssss');
       if (cfResult[0] > cfResult[1]) {
         data['gateStatus'] = 0;
       } else {
@@ -391,7 +435,6 @@ class _AppViewState extends State<AppView> {
   Future<bool> markerShortcut(
       Position startCoordinates, Position destinationCoordinates) async {
     try {
-      print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
       setState(() {
         if (markers.isNotEmpty) markers.clear();
         if (polylines.isNotEmpty) polylines.clear();
@@ -566,37 +609,11 @@ class _AppViewState extends State<AppView> {
     getCurrentLocation();
   }
 
-  Set<Marker> rcMarkers = {
-    Marker(
-      markerId: MarkerId('A'),
-      position: LatLng(23.072897226544825, 70.11426513723994),
-      infoWindow: InfoWindow(
-        title: 'Galpadhar Railway Crossing',
-        snippet: '',
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    ),
-    Marker(
-      markerId: MarkerId('A'),
-      position: LatLng(23.0682255, 70.1310453),
-      infoWindow: InfoWindow(
-        title: 'Meghpar Railway Crossing',
-        snippet: '',
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    ),
-    Marker(
-      markerId: MarkerId('A'),
-      position: LatLng(23.065036799999998, 70.12660079999999),
-      infoWindow: InfoWindow(
-        title: 'Lilashah Railway Crossing',
-        snippet: '',
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    ),
-  };
   @override
   Widget build(BuildContext context) {
+    createMarker1(context);
+    createMarker2(context);
+    createMarker3(context);
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -624,6 +641,38 @@ class _AppViewState extends State<AppView> {
                 polylines: Set<Polyline>.of(polylines.values),
                 onMapCreated: (GoogleMapController controller) {
                   mapController = controller;
+                  Set<Marker> p = {
+                    Marker(
+                      markerId: MarkerId('A'),
+                      position: LatLng(23.072897226544825, 70.11426513723994),
+                      infoWindow: InfoWindow(
+                        title: 'Galpadhar Railway Crossing',
+                        snippet: '',
+                      ),
+                      icon: customIcon1,
+                    ),
+                    Marker(
+                      markerId: MarkerId('B'),
+                      position: LatLng(23.065036799999998, 70.12660079999999),
+                      infoWindow: InfoWindow(
+                        title: 'Lilashah Railway Crossing',
+                        snippet: '',
+                      ),
+                      icon: customIcon2,
+                    ),
+                    Marker(
+                      markerId: MarkerId('C'),
+                      position: LatLng(23.0682255, 70.1310453),
+                      infoWindow: InfoWindow(
+                        title: 'Meghpar Railway Crossing',
+                        snippet: '',
+                      ),
+                      icon: customIcon3,
+                    ),
+                  };
+                  setState(() {
+                    rcMarkers.addAll(p);
+                  });
                 },
               ),
               InputBox(submitData, orgController, destController,

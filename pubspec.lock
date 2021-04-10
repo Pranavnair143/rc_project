@@ -103,7 +103,7 @@ packages:
       name: flutter_native_splash
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.5+1"
+    version: "1.1.7+1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -254,13 +254,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  sklite:
-    dependency: "direct main"
-    description:
-      name: sklite
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

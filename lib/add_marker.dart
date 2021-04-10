@@ -66,8 +66,6 @@ class _AddMarkerState extends State<AddMarker> {
   }
 
   void submitData() async {
-    List<Placemark> p = await placemarkFromCoordinates(
-        userPointer.latitude, userPointer.longitude);
     setState(() {
       if (mrkList != null) {
         setState(() {

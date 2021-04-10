@@ -1,3 +1,3 @@
 class Secrets {
-  static const API_KEY = 'AIzaSyAlDx57d3FsEqr4SJfykYrTOtdflQTWTjo';
+  static const API_KEY = 'Place your API key here............!!!!!!!!!';
 }

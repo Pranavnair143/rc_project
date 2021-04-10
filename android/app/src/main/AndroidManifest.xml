@@ -3,9 +3,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
    <application
         android:label="rc_app"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyAlDx57d3FsEqr4SJfykYrTOtdflQTWTjo"/>
+               android:value="Place Your Api Key here......!!!!!"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
