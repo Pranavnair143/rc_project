@@ -10,21 +10,20 @@ import 'resultSheet.dart';
 import 'api_key.dart';
 import 'input_box.dart';
 import 'add_marker.dart';
-import 'distCalc.dart';
 
 import 'package:dio/dio.dart';
 //MODELS
 import 'ml_models/model1_cf.dart' as onecf;
 import 'ml_models/model1_rg.dart' as onerg;
-import 'ml_models/model2_cf.dart' as twocf;
+//import 'ml_models/model2_cf.dart' as twocf;
 // ignore: unused_import
-import 'ml_models/model2_rg.dart' as tworg;
-import 'ml_models/model3_cf.dart' as threecf;
-import 'ml_models/model3_rg.dart' as threerg;
-import 'ml_models/model4_cf.dart' as fourcf;
-import 'ml_models/model4_rg.dart' as fourrg;
-import 'ml_models/model5_cf.dart' as fivecf;
-import 'ml_models/model5_rg.dart' as fiverg;
+//import 'ml_models/model2_rg.dart' as tworg;
+//import 'ml_models/model3_cf.dart' as threecf;
+//import 'ml_models/model3_rg.dart' as threerg;
+//import 'ml_models/model4_cf.dart' as fourcf;
+//import 'ml_models/model4_rg.dart' as fourrg;
+//import 'ml_models/model5_cf.dart' as fivecf;
+//import 'ml_models/model5_rg.dart' as fiverg;
 
 void main() => runApp(MyApp());
 
@@ -45,44 +44,33 @@ class AppView extends StatefulWidget {
 }
 
 class _AppViewState extends State<AppView> {
-  void addUserMarker(BuildContext context) {
-    print('HELLOOOO');
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return AddMarker(rcMarkers, destController);
-    }));
-  }
-
   Set<Marker> markers = {};
-  Set<Marker> userMarkers = {};
-  Set<Marker> rcMarkers = {
+  BitmapDescriptor myIcon;
+  Set<Marker> userMarkers = {
     Marker(
-      markerId: MarkerId('A'),
-      position: LatLng(23.072897226544825, 70.11426513723994),
+      markerId: MarkerId('Dummy'),
+      position: LatLng(73.072897226544825, 70.11426513723994),
       infoWindow: InfoWindow(
-        title: 'Galpadhar Railway Crossing',
+        title: '',
         snippet: '',
       ),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    ),
-    Marker(
-      markerId: MarkerId('A'),
-      position: LatLng(23.0682255, 70.1310453),
-      infoWindow: InfoWindow(
-        title: 'Meghpar Railway Crossing',
-        snippet: '',
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    ),
-    Marker(
-      markerId: MarkerId('A'),
-      position: LatLng(23.065036799999998, 70.12660079999999),
-      infoWindow: InfoWindow(
-        title: 'Lilashah Railway Crossing',
-        snippet: '',
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      visible: false,
     ),
   };
+
+  void addUserMarker(BuildContext context) async {
+    final Set<Marker> newlyAdded = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                AddMarker(rcMarkers, destController, markerShortcut)));
+    setState(() {
+      if (newlyAdded != null) {
+        userMarkers.addAll(newlyAdded);
+      }
+    });
+  }
 
   int totalDistance;
   double totalDuration;
@@ -216,38 +204,38 @@ class _AppViewState extends State<AppView> {
       }
       print(data['WaitingTime']);
       /*if (rcPoint.markerId == MarkerId('B')) {
-            cfResult = twocf.score(lp);
-            if (cfResult[0] > cfResult[1]) {
-              data['gateStatus'] = 0;
-            } else {
-              data['gateStatus'] = 1;
-              data['waitingTime'] = tworg.score(lp);
-            }
-          } else if (rcPoint.markerId == MarkerId('C')) {
-            cfResult = threecf.score(lp);
-            if (cfResult[0] > cfResult[1]) {
-              data['gateStatus'] = 0;
-            } else {
-              data['gateStatus'] = 1;
-              data['waitingTime'] = threerg.score(lp);
-            }
-          } else if (rcPoint.markerId == MarkerId('D')) {
-            cfResult = fourcf.score(lp);
-            if (cfResult[0] > cfResult[1]) {
-              data['gateStatus'] = 0;
-            } else {
-              data['gateStatus'] = 1;
-              data['waitingTime'] = fourrg.score(lp);
-            }
-          } else if (rcPoint.markerId == MarkerId('E')) {
-            cfResult = fivecf.score(lp);
-            if (cfResult[0] > cfResult[1]) {
-              data['gateStatus'] = 0;
-            } else {
-              data['gateStatus'] = 1;
-              data['waitingTime'] = fiverg.score(lp);
-            }
-          }*/
+        cfResult = twocf.score(lp);
+        if (cfResult[0] > cfResult[1]) {
+          data['gateStatus'] = 0;
+        } else {
+          data['gateStatus'] = 1;
+          data['waitingTime'] = tworg.score(lp);
+        }
+      } else if (rcPoint.markerId == MarkerId('C')) {
+        cfResult = threecf.score(lp);
+        if (cfResult[0] > cfResult[1]) {
+          data['gateStatus'] = 0;
+        } else {
+          data['gateStatus'] = 1;
+          data['waitingTime'] = threerg.score(lp);
+        }
+      } else if (rcPoint.markerId == MarkerId('D')) {
+        cfResult = fourcf.score(lp);
+        if (cfResult[0] > cfResult[1]) {
+          data['gateStatus'] = 0;
+        } else {
+          data['gateStatus'] = 1;
+          data['waitingTime'] = fourrg.score(lp);
+        }
+      } else if (rcPoint.markerId == MarkerId('E')) {
+        cfResult = fivecf.score(lp);
+        if (cfResult[0] > cfResult[1]) {
+          data['gateStatus'] = 0;
+        } else {
+          data['gateStatus'] = 1;
+          data['waitingTime'] = fiverg.score(lp);
+        }
+      }*/
       return data;
     } else {
       data['includesGate'] = 0;
@@ -255,7 +243,7 @@ class _AppViewState extends State<AppView> {
     }
   }
 
-  Future<bool> _calculateDistance() async {
+  Future<bool> _calculateDistance(String orgAddress, String destAddress) async {
     try {
       // Retrieving placemarks from addresses
       print(destAddress);
@@ -400,6 +388,111 @@ class _AppViewState extends State<AppView> {
     });
   }
 
+  Future<bool> markerShortcut(
+      Position startCoordinates, Position destinationCoordinates) async {
+    try {
+      print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+      setState(() {
+        if (markers.isNotEmpty) markers.clear();
+        if (polylines.isNotEmpty) polylines.clear();
+        if (polylineCoordinates.isNotEmpty) polylineCoordinates.clear();
+        if (polylinePoint.isNotEmpty) polylinePoint.clear();
+      });
+      Marker startMarker = Marker(
+        markerId: MarkerId('$startCoordinates'),
+        position: LatLng(
+          startCoordinates.latitude,
+          startCoordinates.longitude,
+        ),
+        infoWindow: InfoWindow(
+          title: 'Start',
+          snippet: orgAddress,
+        ),
+        icon: BitmapDescriptor.defaultMarker,
+      );
+
+      Marker destinationMarker = Marker(
+        markerId: MarkerId('$destinationCoordinates'),
+        position: LatLng(
+          destinationCoordinates.latitude,
+          destinationCoordinates.longitude,
+        ),
+        infoWindow: InfoWindow(
+          title: 'Destination',
+          snippet: destAddress,
+        ),
+        icon: BitmapDescriptor.defaultMarker,
+      );
+
+      markers.add(startMarker);
+      markers.add(destinationMarker);
+      print('START COORDINATES: $startCoordinates');
+      print('DESTINATION COORDINATES: $destinationCoordinates');
+      Position northeastCoordinates;
+      Position southwestCoordinates;
+
+      double miny =
+          (startCoordinates.latitude <= destinationCoordinates.latitude)
+              ? startCoordinates.latitude
+              : destinationCoordinates.latitude;
+      double minx =
+          (startCoordinates.longitude <= destinationCoordinates.longitude)
+              ? startCoordinates.longitude
+              : destinationCoordinates.longitude;
+      double maxy =
+          (startCoordinates.latitude <= destinationCoordinates.latitude)
+              ? destinationCoordinates.latitude
+              : startCoordinates.latitude;
+      double maxx =
+          (startCoordinates.longitude <= destinationCoordinates.longitude)
+              ? destinationCoordinates.longitude
+              : startCoordinates.longitude;
+      print(maxx);
+      // ignore: missing_required_param
+      southwestCoordinates = Position(latitude: miny, longitude: minx);
+      // ignore: missing_required_param
+      northeastCoordinates = Position(latitude: maxy, longitude: maxx);
+      print(southwestCoordinates);
+      mapController.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          LatLngBounds(
+            northeast: LatLng(
+              northeastCoordinates.latitude,
+              northeastCoordinates.longitude,
+            ),
+            southwest: LatLng(
+              southwestCoordinates.latitude,
+              southwestCoordinates.longitude,
+            ),
+          ),
+          100.0,
+        ),
+      );
+      int checkOn;
+      await _createPolylines(startCoordinates, destinationCoordinates);
+      for (var i = 0; i < rcMarkers.length; i++) {
+        checkOn = gmc.PolyUtils.locationIndexOnEdgeOrPath(
+          Point(rcMarkers.elementAt(i).position.latitude,
+              rcMarkers.elementAt(i).position.longitude),
+          polylinePoint,
+          false,
+          false,
+          100,
+        );
+        if (checkOn >= 0) {
+          print(checkOn);
+          break;
+        }
+      }
+
+      showSheet(context, startCoordinates, destinationCoordinates);
+      return true;
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
   void submitData() async {
     orgAddress = orgController.text;
     destAddress = destController.text;
@@ -413,7 +506,7 @@ class _AppViewState extends State<AppView> {
         if (polylineCoordinates.isNotEmpty) polylineCoordinates.clear();
         if (polylinePoint.isNotEmpty) polylinePoint.clear();
       });
-      await _calculateDistance().then((isCalculated) {
+      await _calculateDistance(orgAddress, destAddress).then((isCalculated) {
         if (isCalculated) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -473,6 +566,35 @@ class _AppViewState extends State<AppView> {
     getCurrentLocation();
   }
 
+  Set<Marker> rcMarkers = {
+    Marker(
+      markerId: MarkerId('A'),
+      position: LatLng(23.072897226544825, 70.11426513723994),
+      infoWindow: InfoWindow(
+        title: 'Galpadhar Railway Crossing',
+        snippet: '',
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    ),
+    Marker(
+      markerId: MarkerId('A'),
+      position: LatLng(23.0682255, 70.1310453),
+      infoWindow: InfoWindow(
+        title: 'Meghpar Railway Crossing',
+        snippet: '',
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    ),
+    Marker(
+      markerId: MarkerId('A'),
+      position: LatLng(23.065036799999998, 70.12660079999999),
+      infoWindow: InfoWindow(
+        title: 'Lilashah Railway Crossing',
+        snippet: '',
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    ),
+  };
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -480,15 +602,18 @@ class _AppViewState extends State<AppView> {
       width: MediaQuery.of(context).size.width,
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: () => addUserMarker(context),
+            onPressed: () {
+              addUserMarker(context);
+            },
             child: Icon(Icons.add_location),
           ),
           body: Stack(
             children: [
               GoogleMap(
-                markers: markers != null
-                    ? Set<Marker>.from(
-                        [rcMarkers, markers].expand((x) => x).toList())
+                markers: (markers != null)
+                    ? Set<Marker>.from([userMarkers, rcMarkers, markers]
+                        .expand((x) => x)
+                        .toList())
                     : null,
                 initialCameraPosition: _iniPosition,
                 myLocationButtonEnabled: false,
@@ -501,15 +626,8 @@ class _AppViewState extends State<AppView> {
                   mapController = controller;
                 },
               ),
-              InputBox(
-                  submitData,
-                  orgController,
-                  destController,
-                  currentAddress,
-                  orgNode,
-                  destNode,
-                  userMarkers,
-                  currentPosition),
+              InputBox(submitData, orgController, destController,
+                  currentAddress, orgNode, destNode, currentPosition),
             ],
           )),
     );

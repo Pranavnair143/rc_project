@@ -9,7 +9,6 @@ class InputBox extends StatefulWidget {
   final String currentAddress;
   final FocusNode orgNode;
   final FocusNode destNode;
-  final Set<Marker> markers;
   final Position currentPosition;
 
   InputBox(
@@ -19,7 +18,6 @@ class InputBox extends StatefulWidget {
     this.currentAddress,
     this.orgNode,
     this.destNode,
-    this.markers,
     this.currentPosition,
   );
   @override

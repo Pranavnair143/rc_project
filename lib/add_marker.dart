@@ -7,19 +7,22 @@ import 'package:rc_app/markerSave.dart';
 class AddMarker extends StatefulWidget {
   final Set<Marker> markers;
   final TextEditingController destController;
-  AddMarker(this.markers, this.destController);
+  final Function markerShortcut;
+  AddMarker(this.markers, this.destController, this.markerShortcut);
   @override
   _AddMarkerState createState() => _AddMarkerState();
 }
 
 class _AddMarkerState extends State<AddMarker> {
   Set<Marker> mrkList = {};
+  Set<Marker> showStored = {};
+  Set<Marker> op = {};
   GoogleMapController mapController;
   Position currentPosition;
   LatLng userPointer;
   String currentAddress;
+  Position mrkPosition;
   final markNameController = TextEditingController();
-
   final markAddressController = TextEditingController();
   final nameNode = FocusNode();
   final addressNode = FocusNode();
@@ -67,7 +70,13 @@ class _AddMarkerState extends State<AddMarker> {
         userPointer.latitude, userPointer.longitude);
     setState(() {
       if (mrkList != null) {
-        widget.markers.add(Marker(
+        setState(() {
+          // ignore: missing_required_param
+          mrkPosition = Position(
+              latitude: mrkList.elementAt(0).position.latitude,
+              longitude: mrkList.elementAt(0).position.longitude);
+        });
+        op.add(Marker(
           markerId: MarkerId(userPointer.toString()),
           position: LatLng(mrkList.elementAt(0).position.latitude,
               mrkList.elementAt(0).position.longitude),
@@ -78,16 +87,36 @@ class _AddMarkerState extends State<AddMarker> {
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           onTap: () {
-            setState(() {
-              widget.destController.text = currentAddress;
+            widget.destController.text = currentAddress;
+            widget
+                .markerShortcut(
+                    // ignore: missing_required_param
+                    Position(
+                        latitude: currentPosition.latitude,
+                        longitude: currentPosition.longitude),
+                    // ignore: missing_required_param
+                    mrkPosition)
+                .then((isCalculated) {
+              if (isCalculated) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('See Results'),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error..!!Try Again.'),
+                  ),
+                );
+              }
             });
           },
         ));
         mrkList = {};
         userPointer = null;
+        Navigator.pop(context);
       }
-      print(widget.markers);
-      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Your marker added successfully.!!'),
@@ -105,72 +134,97 @@ class _AddMarkerState extends State<AddMarker> {
   @override
   Widget build(BuildContext context) {
     CameraPosition _iniPosition = CameraPosition(target: LatLng(0.0, 0.0));
-    return Scaffold(
-        floatingActionButton: (userPointer != null)
-            ? Container(
-                alignment: Alignment.bottomCenter,
-                child: IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: const Radius.circular(40),
-                                topRight: const Radius.circular(40))),
-                        backgroundColor: Colors.white,
-                        builder: (_) {
-                          return MarkerSave(
-                            submitData,
-                            markNameController,
-                            markAddressController,
-                            nameNode,
-                            addressNode,
-                            userPointer,
-                          );
-                        });
-                  },
-                  icon: Icon(
-                    Icons.add_location_alt_rounded,
-                    color: Colors.red,
-                    size: 50,
-                  ),
-                ),
-              )
-            : null,
-        body: Stack(
-          children: [
-            GoogleMap(
-              markers: mrkList != null ? mrkList.union(widget.markers) : null,
-              initialCameraPosition: _iniPosition,
-              myLocationButtonEnabled: false,
-              myLocationEnabled: true,
-              mapType: MapType.normal,
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-              },
-              onTap: (LatLng point) {
-                setState(() {
-                  userPointer = point;
-                  Marker markOn = Marker(
-                    markerId: MarkerId(userPointer.toString()),
-                    position:
-                        LatLng(userPointer.latitude, userPointer.longitude),
-                    infoWindow: InfoWindow(
-                      title: markNameController.text,
-                    ),
-                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                        BitmapDescriptor.hueViolet),
-                  );
-                  getAddress();
-                  print(markOn);
-                  mrkList = {};
-                  mrkList.add(markOn);
-                });
-              },
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, op);
+        return false;
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text('Set your marker'),
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: <Color>[Colors.red, Colors.blue])),
             ),
-          ],
-        ));
+          ),
+          floatingActionButton: (userPointer != null)
+              ? Container(
+                  alignment: Alignment.bottomCenter,
+                  child: IconButton(
+                    onPressed: () {
+                      if (markNameController.text.isNotEmpty)
+                        markNameController.text = '';
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: const Radius.circular(40),
+                                  topRight: const Radius.circular(40))),
+                          backgroundColor: Colors.white,
+                          builder: (BuildContext context) {
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              child: MarkerSave(
+                                submitData,
+                                markNameController,
+                                markAddressController,
+                                nameNode,
+                                addressNode,
+                                userPointer,
+                              ),
+                            );
+                          });
+                    },
+                    icon: Icon(
+                      Icons.add_location_alt_rounded,
+                      color: Colors.red,
+                      size: 50,
+                    ),
+                  ),
+                )
+              : null,
+          body: Stack(
+            children: [
+              GoogleMap(
+                markers: mrkList != null
+                    ? Set<Marker>.from([op, mrkList].expand((x) => x).toList())
+                    : null,
+                initialCameraPosition: _iniPosition,
+                myLocationButtonEnabled: false,
+                myLocationEnabled: true,
+                mapType: MapType.normal,
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: false,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController = controller;
+                },
+                onTap: (LatLng point) {
+                  setState(() {
+                    userPointer = point;
+                    Marker markOn = Marker(
+                      markerId: MarkerId(userPointer.toString()),
+                      position:
+                          LatLng(userPointer.latitude, userPointer.longitude),
+                      infoWindow: InfoWindow(
+                        title: markNameController.text,
+                      ),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueViolet),
+                    );
+                    getAddress();
+                    print(markOn);
+                    mrkList = {};
+                    mrkList.add(markOn);
+                  });
+                },
+              ),
+            ],
+          )),
+    );
   }
 }
